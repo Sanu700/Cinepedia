@@ -36,14 +36,25 @@ export default function AdminDashboardClient() {
     const { data: analyticsData, isLoading: isAnalyticsLoading } = useDoc<SiteAnalytics>(analyticsRef);
 
     useEffect(() => {
-        // Run this effect after rendering and when loading is complete.
-        if (!isAdminLoading && !isAdmin) {
-            router.push('/dashboard');
+        // This effect handles redirection based on admin status.
+        // It only runs when the loading state is `false`.
+        if (!isAdminLoading) {
+            // If loading is complete and the user is NOT an admin, redirect them.
+            if (!isAdmin) {
+                router.push('/dashboard');
+            }
         }
     }, [isAdmin, isAdminLoading, router]);
 
-    if (isAdminLoading || isAnalyticsLoading || !isAdmin) {
-        // Show loader while checking auth or if redirecting
+    // Show a loading spinner while we are verifying admin status.
+    // This prevents the redirect logic from firing prematurely.
+    if (isAdminLoading || isAnalyticsLoading) {
+        return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
+    }
+    
+    // After loading, if the user is not an admin, they will have already been redirected.
+    // We can render a fallback or null here just in case the redirect hasn't happened yet.
+    if (!isAdmin) {
         return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
     }
     

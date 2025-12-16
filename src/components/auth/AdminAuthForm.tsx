@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useTransition } from 'react';
@@ -41,10 +42,10 @@ export function AdminAuthForm() {
       if (result.success) {
         toast({
           title: 'Admin Login Successful',
-          description: 'Redirecting to the dashboard...',
+          description: 'Redirecting to the admin dashboard...',
         });
-        // Redirect to the main dashboard. The header will show the admin link if the user is an admin.
-        router.push('/dashboard');
+        // Redirect to the admin dashboard directly
+        router.push('/admin');
       }
     });
   };
