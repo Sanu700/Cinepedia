@@ -56,7 +56,7 @@ npm install
 
 ### 3. Set Up Environment Variables
 
-Create a file named `.env` in the root of your project and add the following variables.
+Create a file named `.env` in the root of your project and add the following variables. You will need to replace the placeholder values with your actual keys and configuration details.
 
 ```env
 # Your Firebase Project Configuration
@@ -65,6 +65,8 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID="your-firebase-project-id"
 NEXT_PUBLIC_FIREBASE_APP_ID="your-firebase-app-id"
 NEXT_PUBLIC_FIREBASE_API_KEY="your-firebase-web-api-key"
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN="your-firebase-auth-domain"
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID="your-firebase-messaging-sender-id"
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID="your-firebase-measurement-id"
 
 # Your TMDB API Key
 # Get this from your TMDB account settings
@@ -74,8 +76,6 @@ NEXT_PUBLIC_TMDB_API_KEY="your-tmdb-api-key"
 # Get this from Google AI Studio
 GEMINI_API_KEY="your-gemini-api-key"
 ```
-
-You will need to replace the placeholder values with your actual keys and configuration details.
 
 ### 4. Firebase Setup
 
