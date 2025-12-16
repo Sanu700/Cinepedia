@@ -83,46 +83,30 @@ export async function submitReview(values: z.infer<typeof ReviewSchema>) {
     }
 
     const { movieId, rating, text, hasSpoiler, userId } = validatedFields.data;
+    const currentUser = auth.currentUser;
 
-    if (!userId) {
+    if (!currentUser || !userId) {
         return { error: "You must be logged in to post a review." };
     }
 
-    const userDocRef = doc(firestore, 'users', userId);
+    // This check is now primarily handled by security rules, but we keep it
+    // for immediate client-side feedback.
+    if (!currentUser.emailVerified) {
+        return { error: "You must verify your email to post a review." };
+    }
 
+    const reviewRef = doc(collection(firestore, "reviews"));
+    
     try {
-        await runTransaction(firestore, async (transaction) => {
-            const userDoc = await transaction.get(userDocRef);
-            if (!userDoc.exists()) {
-                throw "User profile not found.";
-            }
-
-            const userData = userDoc.data();
-
-            // This check is now primarily handled by security rules, but we keep it
-            // for immediate client-side feedback.
-            if (auth.currentUser && !auth.currentUser.emailVerified) {
-                throw "You must verify your email to post a review.";
-            }
-
-            const accountAge = Date.now() - (userData?.creationTimestamp?.toDate()?.getTime() || Date.now());
-            const twentyFourHoursInMillis = 24 * 60 * 60 * 1000;
-
-            if (accountAge < twentyFourHoursInMillis) {
-                throw "New accounts must wait 24 hours before posting a review to prevent spam.";
-            }
-
-            const reviewRef = doc(collection(firestore, "reviews"));
-            transaction.set(reviewRef, {
-                id: reviewRef.id,
-                movieId,
-                userId,
-                rating,
-                text,
-                hasSpoiler: hasSpoiler || false,
-                createdAt: serverTimestamp(),
-                likes: 0,
-            });
+        await setDoc(reviewRef, {
+            id: reviewRef.id,
+            movieId,
+            userId,
+            rating,
+            text,
+            hasSpoiler: hasSpoiler || false,
+            createdAt: serverTimestamp(),
+            likes: 0,
         });
 
         return { success: "Review submitted successfully!" };
