@@ -26,7 +26,7 @@ rules_version = '2';
  * - Default Deny: All paths are closed by default, and permissions are granted explicitly.
  * - Email Verification: The `request.auth.token.email_verified` flag is a mandatory check for
  *   all write operations that contribute content, enhancing the platform's trustworthiness.
- * - User Isolation: Users are strictly forbidden from listing or viewing other users' private
+ * - User Isolation: Users are strictly forbidden from listing other users' private
  *   profile data.
  * - Admin-Managed Content: Collections like `/movies` and `/polls` are treated as read-only for
  *   clients, assuming they are populated and managed through a trusted admin environment (e.g., Admin SDK).
