@@ -1,5 +1,5 @@
-import MovieCard from '@/components/movies/MovieCard';
 import { getMovies } from '@/lib/data';
+import MoviesGrid from '@/components/movies/MoviesGrid';
 
 export default async function MoviesPage() {
   const movies = await getMovies();
@@ -13,11 +13,7 @@ export default async function MoviesPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {movies.map(movie => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
-      </div>
+      <MoviesGrid movies={movies} />
     </div>
   );
 }
