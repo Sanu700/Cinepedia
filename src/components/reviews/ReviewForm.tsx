@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from 'react-hook-form';
@@ -33,8 +34,13 @@ export default function ReviewForm({ movieId, movieSynopsis }: ReviewFormProps) 
       rating: 0,
       text: '',
       movieId: movieId,
-      userId: user?.uid,
+      userId: user?.uid || undefined,
     },
+  });
+
+  // Keep form values in sync with the user state
+  useState(() => {
+    form.setValue('userId', user?.uid);
   });
 
   const reviewText = form.watch('text');
@@ -46,13 +52,19 @@ export default function ReviewForm({ movieId, movieSynopsis }: ReviewFormProps) 
     }
 
     startTransition(async () => {
-        const result = await submitReview({ ...values, userId: user.id });
+        // Ensure the latest userId is included on submission
+        const result = await submitReview({ ...values, userId: user.uid });
          if (result.error) {
             toast({ title: "Error", description: result.error, variant: "destructive"});
         }
         if (result.success) {
             toast({ title: "Success!", description: result.success });
-            form.reset();
+            form.reset({
+              rating: 0,
+              text: '',
+              movieId: movieId,
+              userId: user.uid,
+            });
         }
     });
   };

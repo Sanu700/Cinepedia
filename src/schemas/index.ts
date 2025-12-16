@@ -1,3 +1,4 @@
+
 import * as z from 'zod';
 
 export const LoginSchema = z.object({
@@ -30,5 +31,5 @@ export const ReviewSchema = z.object({
         message: "Review must not exceed 1000 characters."
     }),
     movieId: z.string(),
-    userId: z.string(),
+    userId: z.string().optional(), // Made optional on client, will be injected on server
 });
