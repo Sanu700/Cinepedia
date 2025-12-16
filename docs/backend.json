@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "User": {
@@ -235,6 +236,41 @@
         "currentStreak",
         "lastActivityDate"
       ]
+    },
+    "Admin": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Admin",
+        "type": "object",
+        "description": "Represents an administrator user role.",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "The UID of the user who is an admin."
+          },
+          "grantedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when admin rights were granted."
+          }
+        },
+        "required": ["userId", "grantedAt"]
+    },
+    "SiteAnalytics": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Site Analytics",
+        "type": "object",
+        "description": "Stores aggregated analytics data for the entire site.",
+        "properties": {
+          "totalUsers": { "type": "number", "description": "Total number of registered users." },
+          "totalReviews": { "type": "number", "description": "Total number of reviews submitted." },
+          "totalVotes": { "type": "number", "description": "Total number of votes cast in polls." },
+          "dailySignups": {
+            "type": "object",
+            "description": "A map of dates to the number of new user signups on that day.",
+            "additionalProperties": { "type": "number" }
+          }
+        },
+        "required": ["totalUsers", "totalReviews", "totalVotes"]
     }
   },
   "auth": {
@@ -247,105 +283,36 @@
     "structure": [
       {
         "path": "/users/{userId}",
-        "definition": {
-          "entityName": "User",
-          "schema": {
-            "$ref": "#/backend/entities/User"
-          },
-          "description": "Stores user profiles. Includes standard user data like email, display name, creation timestamp, and email verification status.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier for the user."
-            }
-          ]
-        }
+        "definition": { "entityName": "User", "schema": { "$ref": "#/backend/entities/User" }, "description": "Stores user profiles." }
       },
       {
         "path": "/movies/{movieId}",
-        "definition": {
-          "entityName": "Movie",
-          "schema": {
-            "$ref": "#/backend/entities/Movie"
-          },
-          "description": "Stores movie information, including title, synopsis, genre, release date, and image URL.",
-          "params": [
-            {
-              "name": "movieId",
-              "description": "The unique identifier for the movie."
-            }
-          ]
-        }
+        "definition": { "entityName": "Movie", "schema": { "$ref": "#/backend/entities/Movie" }, "description": "Stores movie information." }
       },
       {
         "path": "/reviews/{reviewId}",
-        "definition": {
-          "entityName": "Review",
-          "schema": {
-            "$ref": "#/backend/entities/Review"
-          },
-          "description": "Stores movie reviews. Includes denormalized 'userId' for authorization independence, 'movieId' to identify what movie the review is for, and a 'likes' field. The review also contains the user's rating, review text, and timestamp.",
-          "params": [
-            {
-              "name": "reviewId",
-              "description": "The unique identifier for the review."
-            }
-          ]
-        }
+        "definition": { "entityName": "Review", "schema": { "$ref": "#/backend/entities/Review" }, "description": "Stores movie reviews." }
       },
       {
         "path": "/polls/{pollId}",
-        "definition": {
-          "entityName": "Poll",
-          "schema": {
-            "$ref": "#/backend/entities/Poll"
-          },
-          "description": "Stores movie poll information, including the two movies being compared and the start and end times of the poll.",
-          "params": [
-            {
-              "name": "pollId",
-              "description": "The unique identifier for the poll."
-            }
-          ]
-        }
+        "definition": { "entityName": "Poll", "schema": { "$ref": "#/backend/entities/Poll" }, "description": "Stores movie poll information." }
       },
       {
         "path": "/polls/{pollId}/votes/{voteId}",
-        "definition": {
-          "entityName": "Vote",
-          "schema": {
-            "$ref": "#/backend/entities/Vote"
-          },
-          "description": "Stores votes for a movie poll. Each vote includes the user's ID, the movie they voted for, and the timestamp of the vote. ",
-          "params": [
-            {
-              "name": "pollId",
-              "description": "The unique identifier for the poll."
-            },
-            {
-              "name": "voteId",
-              "description": "The unique identifier for the vote."
-            }
-          ]
-        }
+        "definition": { "entityName": "Vote", "schema": { "$ref": "#/backend/entities/Vote" }, "description": "Stores votes for a movie poll." }
       },
       {
         "path": "/streaks/{userId}",
-        "definition": {
-          "entityName": "Streak",
-          "schema": {
-            "$ref": "#/backend/entities/Streak"
-          },
-          "description": "Stores user activity streaks. The document ID is the user's ID.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier for the user."
-            }
-          ]
-        }
+        "definition": { "entityName": "Streak", "schema": { "$ref": "#/backend/entities/Streak" }, "description": "Stores user activity streaks." }
+      },
+      {
+        "path": "/admins/{userId}",
+        "definition": { "entityName": "Admin", "schema": { "$ref": "#/backend/entities/Admin" }, "description": "A list of user UIDs with admin privileges." }
+      },
+      {
+        "path": "/analytics/stats",
+        "definition": { "entityName": "SiteAnalytics", "schema": { "$ref": "#/backend/entities/SiteAnalytics" }, "description": "A single document to hold site-wide aggregated statistics." }
       }
-    ],
-    "reasoning": "The Firestore structure is designed to prioritize authorization independence, clarity, and scalability. It leverages denormalization to avoid hierarchical authorization dependencies, ensuring atomic operations and simplified security rules. Segregation of data into collections with homogeneous security postures simplifies rules and ensures QAPs. Path-based ownership is used where appropriate to avoid complex authorization logic, and membership maps are employed for collaborative data access. Radically consistent naming conventions improve debuggability.\n\nSpecifically, authorization independence is achieved by denormalizing user information (isEmailVerified, trustScore) into the reviews collection. This allows us to write security rules for reviews without needing to perform `get()` operations to the users collection. This is crucial for maintaining atomic operations (transactions and batches) when creating or updating reviews.\n\nThe design supports QAPs as follows:\n\n*   Secure List Operations: By segregating data based on ownership (e.g., `/users/{userId}/reviews`) and using dedicated collections for global roles (`/roles_admin/{uid}` - although not explicitly used here, it's a general principle), the structure ensures that list operations can be secured without filtering data based on content.\n*   Membership Model: The `members` field in collaborative documents is denormalized, which avoids `get()` calls to parent documents to verify membership, allowing secure reads and writes without complex filtering."
+    ]
   }
 }

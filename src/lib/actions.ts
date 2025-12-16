@@ -7,6 +7,7 @@ import { SignupSchema, ReviewSchema } from "@/schemas";
 import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { initializeFirebase } from "@/firebase/server";
 import { collection, doc, setDoc, serverTimestamp, getDoc, runTransaction, increment, updateDoc, deleteDoc } from "firebase/firestore";
+import { format } from 'date-fns';
 
 const getAuthErrorMessage = (errorCode: string): string => {
     switch (errorCode) {
@@ -27,6 +28,29 @@ const getAuthErrorMessage = (errorCode: string): string => {
         default:
             return "An unexpected error occurred. Please try again.";
     }
+};
+
+const updateAnalyticsOnSignup = async () => {
+    const { firestore } = initializeFirebase();
+    const analyticsRef = doc(firestore, 'analytics', 'stats');
+    const today = format(new Date(), 'yyyy-MM-dd');
+    
+    await runTransaction(firestore, async (transaction) => {
+        const analyticsDoc = await transaction.get(analyticsRef);
+        if (!analyticsDoc.exists()) {
+            transaction.set(analyticsRef, {
+                totalUsers: 1,
+                totalReviews: 0,
+                totalVotes: 0,
+                dailySignups: { [today]: 1 }
+            });
+        } else {
+            transaction.update(analyticsRef, {
+                totalUsers: increment(1),
+                [`dailySignups.${today}`]: increment(1)
+            });
+        }
+    });
 };
 
 export async function signup(values: z.infer<typeof SignupSchema>) {
@@ -64,6 +88,9 @@ export async function signup(values: z.infer<typeof SignupSchema>) {
         startDate: serverTimestamp(),
     });
     
+    // Update analytics
+    await updateAnalyticsOnSignup();
+
     await sendEmailVerification(user);
     
     return { success: "Account created! Please check your email to verify your account." };
@@ -74,11 +101,6 @@ export async function signup(values: z.infer<typeof SignupSchema>) {
 
 export async function submitReview(values: z.infer<typeof ReviewSchema>) {
     const { auth, firestore } = initializeFirebase();
-    
-    // Server-side auth check is required, can't rely on client-side user object in server actions
-    // For this example, we'll assume a mechanism to get the user ID securely, 
-    // in a real app this would be from a session or token.
-    // For now, we will extract it from the passed values but rely on security rules for enforcement.
     
     const validatedFields = ReviewSchema.safeParse(values);
 
@@ -93,43 +115,48 @@ export async function submitReview(values: z.infer<typeof ReviewSchema>) {
     }
 
     const userDocRef = doc(firestore, 'users', userId);
-    
+    const analyticsRef = doc(firestore, 'analytics', 'stats');
+
     try {
-        const userDoc = await getDoc(userDocRef);
-        if (!userDoc.exists()) {
-            return { error: "User profile not found."};
-        }
+        await runTransaction(firestore, async (transaction) => {
+            const userDoc = await transaction.get(userDocRef);
+            if (!userDoc.exists()) {
+                throw "User profile not found.";
+            }
 
-        const userData = userDoc.data();
+            const userData = userDoc.data();
+            if (!userData.isEmailVerified) {
+                throw "You must verify your email to post a review.";
+            }
 
-        if (!userData.isEmailVerified) {
-            return { error: "You must verify your email to post a review." };
-        }
+            const accountAge = Date.now() - (userData?.creationTimestamp?.toDate()?.getTime() || Date.now());
+            const twentyFourHoursInMillis = 24 * 60 * 60 * 1000;
+            if (accountAge < twentyFourHoursInMillis) {
+                throw "New accounts must wait 24 hours before posting a review to prevent spam.";
+            }
 
-        const accountAge = Date.now() - (userData?.creationTimestamp?.toDate()?.getTime() || Date.now());
-        const twentyFourHoursInMillis = 24 * 60 * 60 * 1000;
+            const reviewRef = doc(collection(firestore, "reviews"));
+            transaction.set(reviewRef, {
+                id: reviewRef.id,
+                movieId,
+                userId,
+                rating,
+                reviewText: text,
+                hasSpoiler: hasSpoiler || false,
+                createdAt: serverTimestamp(),
+                likes: 0,
+            });
 
-        if (accountAge < twentyFourHoursInMillis) {
-            return { error: "New accounts must wait 24 hours before posting a review to prevent spam." };
-        }
-
-        const reviewRef = doc(collection(firestore, "reviews"));
-        
-        await setDoc(reviewRef, {
-            id: reviewRef.id,
-            movieId,
-            userId,
-            rating,
-            reviewText: text,
-            hasSpoiler: hasSpoiler || false,
-            createdAt: serverTimestamp(),
-            likes: 0,
+            // Increment total reviews in analytics
+            transaction.update(analyticsRef, { totalReviews: increment(1) });
         });
+
         return { success: "Review submitted successfully!" };
 
     } catch(e: any) {
         console.error("Review submission error:", e);
-        return { error: "Could not submit review. Please try again." };
+        const errorMessage = typeof e === 'string' ? e : "Could not submit review. Please try again.";
+        return { error: errorMessage };
     }
 }
 
@@ -194,20 +221,31 @@ export async function submitVote(pollId: string, movieId: string) {
     }
 
     const voteRef = doc(firestore, `polls/${pollId}/votes`, currentUser.uid);
+    const analyticsRef = doc(firestore, 'analytics', 'stats');
 
     try {
-        // Use setDoc to enforce one vote per user per poll
-        await setDoc(voteRef, {
-            pollId,
-            userId: currentUser.uid,
-            movieId,
-            timestamp: serverTimestamp()
+        await runTransaction(firestore, async (transaction) => {
+            const voteDoc = await transaction.get(voteRef);
+            if (voteDoc.exists()) {
+                throw "You have already voted in this poll.";
+            }
+
+            // Create the vote document
+            transaction.set(voteRef, {
+                pollId,
+                userId: currentUser.uid,
+                movieId,
+                timestamp: serverTimestamp()
+            });
+
+            // Increment total votes in analytics
+            transaction.update(analyticsRef, { totalVotes: increment(1) });
         });
-        // In a real app, you might use a transaction to update the poll's vote count as well.
-        // For now, this just records the vote.
+
         return { success: "Vote cast!" };
     } catch (e: any) {
-         return { error: "Failed to cast vote. You may have already voted in this poll." };
+         const errorMessage = typeof e === 'string' ? e : "Failed to cast vote.";
+         return { error: errorMessage };
     }
 }
 

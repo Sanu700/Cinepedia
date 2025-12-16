@@ -1,3 +1,4 @@
+
 rules_version = '2';
 
 /**
@@ -20,6 +21,8 @@ rules_version = '2';
  * - /polls/{pollId}/votes/{voteId}: User-specific votes. Creation is locked to verified users,
  *   and the structure prevents duplicate votes.
  * - /streaks/{userId}: User-specific activity streaks, writable only by the owner.
+ * - /admins/{userId}: A list of users with admin privileges.
+ * - /analytics/stats: Centralized document for site-wide statistics.
  *
  * @section Key Security Decisions
  * - Default Deny: All paths are closed by default, and permissions are granted explicitly.
@@ -60,6 +63,14 @@ service cloud.firestore {
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
+    
+    /**
+     * Checks if the authenticated user is an admin.
+     */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
 
     /**
      * Checks for ownership on an existing document.
@@ -105,10 +116,6 @@ service cloud.firestore {
      * @description Manages user profile documents. A user can create, view,
      *              update, and delete their own profile, but cannot access others.
      * @path /users/{userId}
-     * @allow (get) A user requests their own profile: /users/user_abc with auth.uid=user_abc.
-     * @deny (get) A user requests another user's profile: /users/user_xyz with auth.uid=user_abc.
-     * @deny (list) Any user attempts to list all profiles.
-     * @principle Restricts access to a user's own data tree.
      */
     match /users/{userId} {
       allow get: if isOwner(userId);
@@ -117,15 +124,32 @@ service cloud.firestore {
       allow update: if isOwner(userId) && request.resource.data.id == resource.data.id;
       allow delete: if isOwner(userId);
     }
+    
+    /**
+     * @description Manages admin role documents. Only admins can see who else is an admin.
+     *              This collection should be managed from the Firebase console.
+     * @path /admins/{userId}
+     */
+    match /admins/{userId} {
+      allow read: if isAdmin();
+      allow write: if false; // Prevent client-side writes
+    }
+    
+    /**
+     * @description Manages site-wide analytics. Only admins can read this data.
+     *              Data is written by server-side functions (actions).
+     * @path /analytics/stats
+     */
+    match /analytics/stats {
+      allow read: if isAdmin();
+      allow write: if false; // Prevent client-side writes
+    }
 
     /**
      * @description Defines rules for the publicly readable collection of movies.
      *              This data is considered public and managed by admins, so client
      *              writes are disabled.
      * @path /movies/{movieId}
-     * @allow (get, list) Any user, signed in or not, can view movie data.
-     * @deny (create, update, delete) Any client attempts to modify the movie list.
-     * @principle Secures global content as read-only for clients.
      */
     match /movies/{movieId} {
       allow get, list: if true;
@@ -137,18 +161,13 @@ service cloud.firestore {
      *              Creating, updating, or deleting requires ownership and verification.
      *              Liking a review only requires a verified account.
      * @path /reviews/{reviewId}
-     * @allow (create) An email-verified user with an account >24h old submits a review.
-     * @allow (update) The original author edits their own review, or any verified user likes a review.
-     * @deny (create) A user without a verified email attempts to submit a review.
-     * @deny (update) A user tries to edit fields other than 'likes' on someone else's review.
-     * @principle Enforces document ownership for content and community trust for interactions.
      */
     match /reviews/{reviewId} {
       allow get, list: if true;
       allow create: if isValidNewReview();
       allow update: if 
           // Rule 1: The owner can update their own review text, rating, and spoiler tag.
-          (isExistingOwner(resource.data.userId) && isVerifiedUser() && request.resource.data.userId == resource.data.userId && request.resource.data.keys().hasAll(['rating', 'reviewText', 'hasSpoiler'])) ||
+          (isExistingOwner(resource.data.userId) && isVerifiedUser() && request.resource.data.userId == resource.data.userId && request.resource.data.keys().hasAll(['rating', 'text', 'hasSpoiler'])) ||
           // Rule 2: Any verified user can update *only* the 'likes' field to increment it by 1.
           (isVerifiedUser() && request.resource.data.keys().hasOnly(['likes']) && request.resource.data.likes == resource.data.likes + 1);
       allow delete: if isExistingOwner(resource.data.userId);
@@ -158,9 +177,6 @@ service cloud.firestore {
      * @description Defines rules for the publicly readable collection of polls.
      *              This data is managed by admins; client writes are disabled.
      * @path /polls/{pollId}
-     * @allow (get, list) Any user, signed in or not, can view poll data.
-     * @deny (create, update, delete) Any client attempts to modify the poll list.
-     * @principle Secures global content as read-only for clients.
      */
     match /polls/{pollId} {
       allow get, list: if true;
@@ -171,17 +187,11 @@ service cloud.firestore {
        *              that the document ID for a vote MUST be the user's UID to
        *              prevent duplicate votes. Votes are immutable.
        * @path /polls/{pollId}/votes/{voteId}
-       * @allow (create) An email-verified user casts a vote, creating /polls/poll_123/votes/user_abc.
-       * @deny (create) The same user tries to create another vote document in the same poll.
-       * @deny (list) A user tries to list all votes to see who voted for what.
-       * @principle Enforces relational integrity (one vote per user) and data privacy.
        */
       match /votes/{userId} {
         allow get: if isOwner(userId);
         allow list: if false;
-        // A user can create a vote if they are the owner and have a verified email.
         allow create: if isOwner(userId) && isVerifiedUser();
-        // Votes cannot be updated or deleted to maintain poll integrity.
         allow update, delete: if false;
       }
     }
@@ -190,13 +200,9 @@ service cloud.firestore {
      * @description Defines rules for user activity streaks. A user can read and
      *              write their own streak data.
      * @path /streaks/{userId}
-     * @allow (get, write) A user manages their own streak document.
-     * @deny (list) No user can list all streaks.
      */
     match /streaks/{userId} {
-        allow get: if isOwner(userId);
-        allow write: if isOwner(userId);
-        allow list: if false;
+        allow read, write: if isOwner(userId);
     }
   }
 }
