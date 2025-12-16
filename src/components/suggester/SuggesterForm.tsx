@@ -7,7 +7,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2, Film, Tv, Star, Clock } from 'lucide-react';
-import { suggestMovies, type MovieSuggesterInput, type MovieSuggesterOutput } from '@/ai/flows/movie-suggester';
+import { suggestMovies, type MovieSuggesterInput } from '@/ai/flows/movie-suggester';
+import type { MovieSuggesterOutput } from '@/ai/flows/movie-suggester';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Separator } from '../ui/separator';
@@ -36,7 +37,7 @@ export default function SuggesterForm() {
   const [step, setStep] = useState<Step>('mood');
   const [selectedMood, setSelectedMood] = useState<MovieSuggesterInput['mood'] | null>(null);
   const [selectedPreferences, setSelectedPreferences] = useState<MovieSuggesterInput['preferences']>([]);
-  const [results, setResults] = useState<MovieSuggesterOutput[] | null>(null);
+  const [results, setResults] = useState<(MovieSuggesterOutput)[] | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const handleMoodSelect = (mood: MovieSuggesterInput['mood']) => {
@@ -73,6 +74,7 @@ export default function SuggesterForm() {
 
   const surpriseMe = () => {
     if (results && results.length > 0) {
+      // This will only run on the client after a click, so Math.random is safe here.
       const randomIndex = Math.floor(Math.random() * results.length);
       const surpriseMovie = results[randomIndex];
       setResults([surpriseMovie]);
