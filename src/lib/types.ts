@@ -5,6 +5,21 @@ export interface User {
   avatarUrl?: string;
 }
 
+export interface WatchProvider {
+    logo_path: string;
+    provider_id: number;
+    provider_name: string;
+    display_priority: number;
+}
+
+export interface WatchProviderResult {
+    link: string;
+    flatrate?: WatchProvider[];
+    rent?: WatchProvider[];
+    buy?: WatchProvider[];
+}
+
+
 export interface Movie {
   id: number;
   tmdbId?: number;
@@ -19,6 +34,8 @@ export interface Movie {
   avgRating: number;
   genres: { id: number, name: string }[];
   reviews: Review[]; // To be populated from Firestore
+  runtime?: number;
+  watchProviders?: WatchProviderResult;
 }
 
 export interface Review {

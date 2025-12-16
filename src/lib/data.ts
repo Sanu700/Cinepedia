@@ -1,4 +1,3 @@
-
 import type { Movie, Review, User, UserActivity, TMDBSearchResult } from '@/lib/types';
 
 // --- TMDB API ---
@@ -24,12 +23,18 @@ const fetchFromTMDB = async (path: string, params: Record<string, string> = {}) 
 
 // --- Data Fetching Functions ---
 
-export async function getMovies(): Promise<Movie[]> {
-  const data: TMDBSearchResult<Movie> = await fetchFromTMDB('/movie/popular');
+export async function getMovies(params: Record<string, string> = {}): Promise<Movie[]> {
+  const data: TMDBSearchResult<Movie> = await fetchFromTMDB('/discover/movie', {
+      include_adult: 'false',
+      include_video: 'false',
+      language: 'en-US',
+      page: '1',
+      sort_by: 'popularity.desc',
+      ...params,
+  });
   if (!data || !data.results) return [];
   return data.results.map(movie => ({
     ...movie,
-    // Add any necessary transformations here
     releaseYear: movie.release_date ? parseInt(movie.release_date.split('-')[0]) : 0,
     avgRating: movie.vote_average,
     reviews: [], // Reviews will be fetched separately from Firestore
@@ -37,17 +42,20 @@ export async function getMovies(): Promise<Movie[]> {
 }
 
 export async function getMovieById(id: string): Promise<Movie | undefined> {
-  const movie: Movie = await fetchFromTMDB(`/movie/${id}`);
+  const movie: Movie = await fetchFromTMDB(`/movie/${id}`, { append_to_response: 'credits,runtime' });
   if (!movie) return undefined;
   
-  // In a real app, reviews would be fetched from Firestore.
-  // For now, we return the movie with an empty reviews array.
   return {
     ...movie,
     releaseYear: movie.release_date ? parseInt(movie.release_date.split('-')[0]) : 0,
     avgRating: movie.vote_average,
     reviews: [],
   };
+}
+
+export async function getWatchProviders(movieId: number) {
+    const data = await fetchFromTMDB(`/movie/${movieId}/watch/providers`);
+    return data?.results?.US; // Focusing on US providers for simplicity
 }
 
 
