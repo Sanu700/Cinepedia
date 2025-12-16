@@ -42,11 +42,15 @@ export default function DashboardClient() {
   const [dashboardData, setDashboardData] = useState<Awaited<ReturnType<typeof getUserDashboardData>> | null>(null);
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
-    if (user) {
+    // Wait until the loading is finished before checking for a user.
+    if (!loading) {
+      if (!user) {
+        // If not loading and no user, then redirect.
+        router.push('/login');
+      } else {
+        // If there is a user, fetch their data.
         getUserDashboardData(user.uid).then(setDashboardData);
+      }
     }
   }, [user, loading, router]);
 
