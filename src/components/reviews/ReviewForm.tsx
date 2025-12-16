@@ -4,7 +4,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useTransition, useState } from 'react';
+import { useTransition, useEffect } from 'react';
 import { useUser } from '@/firebase';
 import { ReviewSchema } from '@/schemas';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -34,14 +34,14 @@ export default function ReviewForm({ movieId, movieSynopsis }: ReviewFormProps) 
       rating: 0,
       text: '',
       movieId: movieId,
-      userId: user?.uid || undefined,
+      userId: user?.uid,
     },
   });
 
   // Keep form values in sync with the user state
-  useState(() => {
+  useEffect(() => {
     form.setValue('userId', user?.uid);
-  });
+  }, [user, form]);
 
   const reviewText = form.watch('text');
 
@@ -50,10 +50,12 @@ export default function ReviewForm({ movieId, movieSynopsis }: ReviewFormProps) 
         toast({ title: "Authentication Error", description: "You must be logged in to post a review.", variant: "destructive"});
         return;
     }
+    
+    // Ensure the latest userId is included on submission, as the form value might be stale
+    const finalValues = { ...values, userId: user.uid };
 
     startTransition(async () => {
-        // Ensure the latest userId is included on submission
-        const result = await submitReview({ ...values, userId: user.uid });
+        const result = await submitReview(finalValues);
          if (result.error) {
             toast({ title: "Error", description: result.error, variant: "destructive"});
         }
@@ -71,7 +73,7 @@ export default function ReviewForm({ movieId, movieSynopsis }: ReviewFormProps) 
 
   if (!user) {
     return (
-        <Card className="mt-8">
+        <Card>
             <CardHeader>
                 <CardTitle className="font-headline">Join the Conversation</CardTitle>
             </CardHeader>
@@ -91,7 +93,7 @@ export default function ReviewForm({ movieId, movieSynopsis }: ReviewFormProps) 
   }
 
   return (
-    <Card className="mt-8">
+    <Card>
       <CardHeader>
         <CardTitle className="font-headline">Write a Review</CardTitle>
         <CardDescription>Share your thoughts with the community.</CardDescription>
