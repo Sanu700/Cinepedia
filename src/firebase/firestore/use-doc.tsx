@@ -57,7 +57,6 @@ export function useDoc<T = any>(
 
     setIsLoading(true);
     setError(null);
-    // Optional: setData(null); // Clear previous data instantly
 
     const unsubscribe = onSnapshot(
       memoizedDocRef,
@@ -76,7 +75,6 @@ export function useDoc<T = any>(
         // Instead of creating and throwing a global error, we set the error state locally.
         // This prevents the entire application from crashing.
         // The component using this hook can then decide how to handle the error UI.
-        console.warn(`Firestore 'get' operation failed for path: ${memoizedDocRef.path}. This is expected if the document doesn't exist. Silently failing.`);
         setError(error);
         setData(null);
         setIsLoading(false);
