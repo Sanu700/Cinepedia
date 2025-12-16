@@ -1,3 +1,4 @@
+
 import type { Movie, Review, User, ImagePlaceholder, UserActivity } from '@/lib/types';
 import imageData from './placeholder-images.json';
 
