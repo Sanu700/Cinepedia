@@ -2,9 +2,9 @@
 
 import { z } from "zod";
 import { LoginSchema, SignupSchema, ReviewSchema } from "@/schemas";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { initializeFirebase } from "@/firebase/server";
-import { doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
+import { collection, doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
 
 const getAuthErrorMessage = (errorCode: string): string => {
     switch (errorCode) {

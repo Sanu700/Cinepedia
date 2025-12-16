@@ -58,10 +58,12 @@ export function AuthForm({ type }: AuthFormProps) {
           title: 'Success!',
           description: result.success,
         });
+        // router.push() may not be enough to re-trigger auth checks.
+        // window.location.href forces a full page reload and re-evaluation.
         if (isLogin) {
-          router.push('/dashboard');
+          window.location.href = '/dashboard';
         } else {
-          router.push('/'); 
+          window.location.href = '/login'; 
         }
       }
     });
@@ -82,7 +84,7 @@ export function AuthForm({ type }: AuthFormProps) {
                 title: 'Success!',
                 description: 'Logged in with Google successfully.'
             });
-            router.push('/dashboard');
+            window.location.href = '/dashboard';
         }
     })
   }
