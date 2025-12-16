@@ -1,105 +1,177 @@
+rules_version = '2';
 
-'use client';
+/**
+ * @file firestore.rules
+ * @description Security rules for the Cinepedia application.
+ *
+ * @section Core Philosophy
+ * This ruleset enforces a user-centric security model. Users have explicit ownership
+ * of their content, such as profiles, reviews, and votes. Public data like movies and
+ * polls are readable by anyone but are not writable by clients to ensure data integrity.
+ * A critical aspect of this model is the enforcement of email verification for any
+ * content-creation actions (writing reviews, voting) to build a trusted community.
+ *
+ * @section Data Structure
+ * The data structure is primarily flat to ensure simple, performant security rules.
+ * - /users/{userId}: Private user profiles, only accessible by the owner.
+ * - /movies/{movieId}: Public movie information, read-only for clients.
+ * - /reviews/{reviewId}: Public reviews, readable by all, but writes are restricted to the verified owner.
+ * - /polls/{pollId}: Public poll information, read-only for clients.
+ * - /polls/{pollId}/votes/{voteId}: User-specific votes. Creation is locked to verified users,
+ *   and the structure prevents duplicate votes.
+ * - /streaks/{userId}: User-specific activity streaks, writable only by the owner.
+ *
+ * @section Key Security Decisions
+ * - Default Deny: All paths are closed by default, and permissions are granted explicitly.
+ * - Email Verification: The `request.auth.token.email_verified` flag is a mandatory check for
+ *   all write operations that contribute content, enhancing the platform's trustworthiness.
+ * - Spam Prevention: New accounts (less than 24 hours old) are prohibited from writing reviews
+ *   to mitigate spam and low-quality content. This requires a `get` call to the user's profile.
+ * - User Isolation: Users are strictly forbidden from listing or viewing other users' private
+ *   profile data.
+ * - Admin-Managed Content: Collections like `/movies` and `/polls` are treated as read-only for
+ *   clients, assuming they are populated and managed through a trusted admin environment (e.g., Admin SDK).
+ *
+ * @section Denormalization for Authorization
+ * To create fast and simple rules, this ruleset relies on denormalized ownership fields.
+ * - The `/reviews` collection contains a `userId` field on each document. This allows for direct
+ *   ownership checks (`resource.data.userId == request.auth.uid`) without costly `get` calls to other collections.
+ * - The `/polls/{pollId}/votes` subcollection enforces a structure where the vote document ID must be the
+ *   user's UID (`/polls/{pollId}/votes/{userId}`). This pattern provides a simple, robust, and performant
+ *   way to prevent duplicate votes at the database level.
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAdminStatus } from "@/hooks/useAdminStatus";
-import { useDoc, useMemoFirebase } from "@/firebase";
-import { doc, getFirestore } from "firebase/firestore";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Users, FileText, Vote } from "lucide-react";
-import type { SiteAnalytics } from "@/lib/types";
+    // -------------------------------------------------------------------------
+    // Helper Functions
+    // -------------------------------------------------------------------------
 
-const StatCard = ({ title, value, icon: Icon }: { title: string; value: string | number; icon: React.ElementType }) => (
-    <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{title}</CardTitle>
-            <Icon className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-            <div className="text-2xl font-bold">{value}</div>
-        </CardContent>
-    </Card>
-);
+    /**
+     * Checks if a user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
 
-export default function AdminDashboardClient() {
-    const router = useRouter();
-    const { isAdmin, isLoading: isAdminLoading } = useAdminStatus();
-    const firestore = getFirestore();
+    /**
+     * Checks if the authenticated user's UID matches the provided userId.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
 
-    const analyticsRef = useMemoFirebase(() => {
-        if (!firestore) return null;
-        return doc(firestore, 'analytics', 'stats');
-    }, [firestore]);
-    
-    const { data: analyticsData, isLoading: isAnalyticsLoading } = useDoc<SiteAnalytics>(analyticsRef);
+    /**
+     * Checks for ownership on an existing document.
+     * Used for state-changing operations like update and delete.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
 
-    useEffect(() => {
-        // This effect handles redirection based on admin status.
-        // It only runs when the loading state is `false`.
-        if (!isAdminLoading) {
-            // If loading is complete and the user is NOT an admin, redirect them.
-            if (!isAdmin) {
-                router.push('/dashboard');
-            }
-        }
-    }, [isAdmin, isAdminLoading, router]);
+    /**
+     * Checks if the signed-in user has verified their email address.
+     * This is a critical check for content creation.
+     */
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
 
-    // Show a loading spinner while we are verifying admin status.
-    // This prevents the redirect logic from firing prematurely.
-    if (isAdminLoading || isAnalyticsLoading) {
-        return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
+    /**
+     * Checks if the user's account is older than 24 hours to prevent spam.
+     * NOTE: This requires that the 'creationTimestamp' field on the user's profile
+     * is saved as a Firestore Timestamp object.
+     */
+    function isEstablishedUser() {
+      let userCreationTime = get(/databases/$(database)/documents/users/$(request.auth.uid)).data.creationTimestamp;
+      // Ensure creationTime is not null and is a timestamp before comparison.
+      return userCreationTime != null && request.time > userCreationTime + duration.value(24, 'h');
+    }
+
+    /**
+     * Validates all conditions for creating a new review.
+     * A user must be verified, have an account older than 24 hours,
+     * and correctly set the owner `userId` field in the review data.
+     */
+    function isValidNewReview() {
+      return isVerifiedUser() && isEstablishedUser() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // -------------------------------------------------------------------------
+    // Collection Rules
+    // -------------------------------------------------------------------------
+
+    /**
+     * @description Manages user profile documents. A user can create, view,
+     *              update, and delete their own profile, but cannot access others.
+     * @path /users/{userId}
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isOwner(userId);
     }
     
-    // After loading, if the user is not an admin, they will have already been redirected.
-    // We can render a fallback or null here just in case the redirect hasn't happened yet.
-    if (!isAdmin) {
-        return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
+    /**
+     * @description Defines rules for the publicly readable collection of movies.
+     *              This data is considered public and managed by admins, so client
+     *              writes are disabled.
+     * @path /movies/{movieId}
+     */
+    match /movies/{movieId} {
+      allow get, list: if true;
+      allow write: if false;
+    }
+
+    /**
+     * @description Defines rules for movie reviews. Reviews are public to read.
+     *              Creating, updating, or deleting requires ownership and verification.
+     *              Liking a review only requires a verified account.
+     * @path /reviews/{reviewId}
+     */
+    match /reviews/{reviewId} {
+      allow get, list: if true;
+      allow create: if isValidNewReview();
+      allow update: if 
+          // Rule 1: The owner can update their own review text, rating, and spoiler tag.
+          (isExistingOwner(resource.data.userId) && isVerifiedUser() && request.resource.data.userId == resource.data.userId && request.resource.data.keys().hasAll(['rating', 'text', 'hasSpoiler'])) ||
+          // Rule 2: Any verified user can update *only* the 'likes' field to increment it by 1.
+          (isVerifiedUser() && request.resource.data.keys().hasOnly(['likes']) && request.resource.data.likes == resource.data.likes + 1);
+      allow delete: if isExistingOwner(resource.data.userId);
+    }
+
+    /**
+     * @description Defines rules for the publicly readable collection of polls.
+     *              This data is managed by admins; client writes are disabled.
+     * @path /polls/{pollId}
+     */
+    match /polls/{pollId} {
+      allow get, list: if true;
+      allow write: if false;
+
+      /**
+       * @description Defines rules for votes within a poll. This rule enforces
+       *              that the document ID for a vote MUST be the user's UID to
+       *              prevent duplicate votes. Votes are immutable.
+       * @path /polls/{pollId}/votes/{voteId}
+       */
+      match /votes/{userId} {
+        allow get: if isOwner(userId);
+        allow list: if false;
+        allow create: if isOwner(userId) && isVerifiedUser();
+        allow update, delete: if false;
+      }
     }
     
-    // Prepare data for the chart
-    const dailySignups = analyticsData?.dailySignups || {};
-    const chartData = Object.entries(dailySignups)
-        .map(([date, count]) => ({ date, signups: count }))
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-
-    return (
-        <div className="space-y-8">
-             <div>
-                <h1 className="text-4xl font-headline font-bold">Admin Dashboard</h1>
-                <p className="mt-2 text-lg text-muted-foreground">An overview of site activity and statistics.</p>
-            </div>
-            
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <StatCard title="Total Users" value={analyticsData?.totalUsers ?? 0} icon={Users} />
-                <StatCard title="Total Reviews" value={analyticsData?.totalReviews ?? 0} icon={FileText} />
-                <StatCard title="Total Votes Cast" value={analyticsData?.totalVotes ?? 0} icon={Vote} />
-            </div>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>Recent Signups</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                        <BarChart data={chartData}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="date" />
-                            <YAxis allowDecimals={false} />
-                            <Tooltip
-                                contentStyle={{
-                                    backgroundColor: 'hsl(var(--background))',
-                                    borderColor: 'hsl(var(--border))'
-                                }}
-                            />
-                            <Legend />
-                            <Bar dataKey="signups" fill="hsl(var(--primary))" name="New Users" />
-                        </BarChart>
-                    </ResponsiveContainer>
-                </CardContent>
-            </Card>
-        </div>
-    );
+    /**
+     * @description Defines rules for user activity streaks. A user can read and
+     *              write their own streak data.
+     * @path /streaks/{userId}
+     */
+    match /streaks/{userId} {
+        allow read, write: if isOwner(userId);
+    }
+  }
 }

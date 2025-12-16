@@ -93,15 +93,3 @@ export interface Streak {
     startDate: string; // ISO string
     lastActivityDate: string; // ISO string
 }
-
-export interface SiteAnalytics {
-    totalUsers: number;
-    totalReviews: number;
-    totalVotes: number;
-    dailySignups: { [date: string]: number }; // e.g. { '2024-07-30': 15 }
-}
-
-export interface Admin {
-    userId: string;
-    grantedAt: string; // ISO string
-}

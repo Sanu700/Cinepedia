@@ -21,8 +21,6 @@ rules_version = '2';
  * - /polls/{pollId}/votes/{voteId}: User-specific votes. Creation is locked to verified users,
  *   and the structure prevents duplicate votes.
  * - /streaks/{userId}: User-specific activity streaks, writable only by the owner.
- * - /admins/{userId}: A list of users with admin privileges.
- * - /analytics/stats: Centralized document for site-wide statistics.
  *
  * @section Key Security Decisions
  * - Default Deny: All paths are closed by default, and permissions are granted explicitly.
@@ -63,14 +61,6 @@ service cloud.firestore {
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
-    
-    /**
-     * Checks if the authenticated user is an admin.
-     */
-    function isAdmin() {
-      return isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
-    }
-
 
     /**
      * Checks for ownership on an existing document.
@@ -125,26 +115,6 @@ service cloud.firestore {
       allow delete: if isOwner(userId);
     }
     
-    /**
-     * @description Manages admin role documents. Only admins can see who else is an admin.
-     *              This collection should be managed from the Firebase console.
-     * @path /admins/{userId}
-     */
-    match /admins/{userId} {
-      allow read: if isAdmin();
-      allow write: if false; // Prevent client-side writes
-    }
-    
-    /**
-     * @description Manages site-wide analytics. Only admins can read this data.
-     *              Data is written by server-side functions (actions).
-     * @path /analytics/stats
-     */
-    match /analytics/stats {
-      allow read: if isAdmin();
-      allow write: if false; // Prevent client-side writes
-    }
-
     /**
      * @description Defines rules for the publicly readable collection of movies.
      *              This data is considered public and managed by admins, so client

@@ -30,29 +30,6 @@ const getAuthErrorMessage = (errorCode: string): string => {
     }
 };
 
-const updateAnalyticsOnSignup = async () => {
-    const { firestore } = initializeFirebase();
-    const analyticsRef = doc(firestore, 'analytics', 'stats');
-    const today = format(new Date(), 'yyyy-MM-dd');
-    
-    await runTransaction(firestore, async (transaction) => {
-        const analyticsDoc = await transaction.get(analyticsRef);
-        if (!analyticsDoc.exists()) {
-            transaction.set(analyticsRef, {
-                totalUsers: 1,
-                totalReviews: 0,
-                totalVotes: 0,
-                dailySignups: { [today]: 1 }
-            });
-        } else {
-            transaction.update(analyticsRef, {
-                totalUsers: increment(1),
-                [`dailySignups.${today}`]: increment(1)
-            });
-        }
-    });
-};
-
 export async function signup(values: z.infer<typeof SignupSchema>) {
   const validatedFields = SignupSchema.safeParse(values);
 
@@ -88,9 +65,6 @@ export async function signup(values: z.infer<typeof SignupSchema>) {
         startDate: serverTimestamp(),
     });
     
-    // Update analytics
-    await updateAnalyticsOnSignup();
-
     await sendEmailVerification(user);
     
     return { success: "Account created! Please check your email to verify your account." };
@@ -115,7 +89,6 @@ export async function submitReview(values: z.infer<typeof ReviewSchema>) {
     }
 
     const userDocRef = doc(firestore, 'users', userId);
-    const analyticsRef = doc(firestore, 'analytics', 'stats');
 
     try {
         await runTransaction(firestore, async (transaction) => {
@@ -146,9 +119,6 @@ export async function submitReview(values: z.infer<typeof ReviewSchema>) {
                 createdAt: serverTimestamp(),
                 likes: 0,
             });
-
-            // Increment total reviews in analytics
-            transaction.update(analyticsRef, { totalReviews: increment(1) });
         });
 
         return { success: "Review submitted successfully!" };
@@ -221,7 +191,6 @@ export async function submitVote(pollId: string, movieId: string) {
     }
 
     const voteRef = doc(firestore, `polls/${pollId}/votes`, currentUser.uid);
-    const analyticsRef = doc(firestore, 'analytics', 'stats');
 
     try {
         await runTransaction(firestore, async (transaction) => {
@@ -238,8 +207,6 @@ export async function submitVote(pollId: string, movieId: string) {
                 timestamp: serverTimestamp()
             });
 
-            // Increment total votes in analytics
-            transaction.update(analyticsRef, { totalVotes: increment(1) });
         });
 
         return { success: "Vote cast!" };

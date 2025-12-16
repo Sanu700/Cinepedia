@@ -16,11 +16,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Logo from '@/components/shared/Logo';
-import { User as UserIcon, LogOut, LayoutDashboard, Film, Vote, Search, ShieldCheck } from 'lucide-react';
+import { User as UserIcon, LogOut, LayoutDashboard, Film, Vote, Search } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import { getAuth } from 'firebase/auth';
 import { Input } from '../ui/input';
-import { useAdminStatus } from '@/hooks/useAdminStatus';
 
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <Button variant="ghost" asChild>
@@ -55,7 +54,6 @@ const SearchBar = () => {
 
 export default function Header() {
   const { user, isUserLoading: loading } = useUser();
-  const { isAdmin } = useAdminStatus();
   const auth = getAuth();
   
   const logout = async () => {
@@ -112,14 +110,6 @@ export default function Header() {
                     <span>Dashboard</span>
                   </Link>
                 </DropdownMenuItem>
-                {isAdmin && (
-                  <DropdownMenuItem asChild>
-                    <Link href="/admin">
-                      <ShieldCheck className="mr-2 h-4 w-4" />
-                      <span>Admin</span>
-                    </Link>
-                  </DropdownMenuItem>
-                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4" />

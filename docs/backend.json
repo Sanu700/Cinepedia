@@ -236,41 +236,6 @@
         "currentStreak",
         "lastActivityDate"
       ]
-    },
-    "Admin": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "title": "Admin",
-        "type": "object",
-        "description": "Represents an administrator user role.",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "description": "The UID of the user who is an admin."
-          },
-          "grantedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when admin rights were granted."
-          }
-        },
-        "required": ["userId", "grantedAt"]
-    },
-    "SiteAnalytics": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "title": "Site Analytics",
-        "type": "object",
-        "description": "Stores aggregated analytics data for the entire site.",
-        "properties": {
-          "totalUsers": { "type": "number", "description": "Total number of registered users." },
-          "totalReviews": { "type": "number", "description": "Total number of reviews submitted." },
-          "totalVotes": { "type": "number", "description": "Total number of votes cast in polls." },
-          "dailySignups": {
-            "type": "object",
-            "description": "A map of dates to the number of new user signups on that day.",
-            "additionalProperties": { "type": "number" }
-          }
-        },
-        "required": ["totalUsers", "totalReviews", "totalVotes"]
     }
   },
   "auth": {
@@ -304,14 +269,6 @@
       {
         "path": "/streaks/{userId}",
         "definition": { "entityName": "Streak", "schema": { "$ref": "#/backend/entities/Streak" }, "description": "Stores user activity streaks." }
-      },
-      {
-        "path": "/admins/{userId}",
-        "definition": { "entityName": "Admin", "schema": { "$ref": "#/backend/entities/Admin" }, "description": "A list of user UIDs with admin privileges." }
-      },
-      {
-        "path": "/analytics/stats",
-        "definition": { "entityName": "SiteAnalytics", "schema": { "$ref": "#/backend/entities/SiteAnalytics" }, "description": "A single document to hold site-wide aggregated statistics." }
       }
     ]
   }

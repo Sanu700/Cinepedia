@@ -5,8 +5,7 @@ import { z } from "zod";
 import { LoginSchema } from "@/schemas";
 import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { initializeFirebase } from "@/firebase";
-import { doc, setDoc, getDoc, serverTimestamp, runTransaction, increment } from "firebase/firestore";
-import { format } from "date-fns";
+import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 
 
 const getAuthErrorMessage = (errorCode: string): string => {
@@ -50,29 +49,6 @@ export async function signInWithEmail(values: z.infer<typeof LoginSchema>) {
     }
 }
 
-const updateAnalyticsOnSignup = async () => {
-    const { firestore } = initializeFirebase();
-    const analyticsRef = doc(firestore, 'analytics', 'stats');
-    const today = format(new Date(), 'yyyy-MM-dd');
-    
-    await runTransaction(firestore, async (transaction) => {
-        const analyticsDoc = await transaction.get(analyticsRef);
-        if (!analyticsDoc.exists()) {
-            transaction.set(analyticsRef, {
-                totalUsers: 1,
-                totalReviews: 0,
-                totalVotes: 0,
-                dailySignups: { [today]: 1 }
-            });
-        } else {
-            transaction.update(analyticsRef, {
-                totalUsers: increment(1),
-                [`dailySignups.${today}`]: increment(1)
-            });
-        }
-    });
-};
-
 export async function signInWithGoogle() {
   const { auth, firestore } = initializeFirebase();
   const provider = new GoogleAuthProvider();
@@ -104,8 +80,6 @@ export async function signInWithGoogle() {
           startDate: serverTimestamp(),
       });
       
-      // Update analytics since this is a new user
-      await updateAnalyticsOnSignup();
     }
     
     return { success: "Logged in successfully!" };
