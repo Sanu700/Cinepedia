@@ -8,21 +8,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Review } from "@/lib/types";
+import type { Review, Movie } from "@/lib/types";
 import StarRating from "../reviews/StarRating";
 import { format } from "date-fns";
+import Link from "next/link";
+
+interface ReviewWithMovie extends Review {
+    movie?: Movie;
+}
 
 interface UserReviewsProps {
-  reviews: Review[];
+  reviews: ReviewWithMovie[];
 }
 
 export default function UserReviews({ reviews }: UserReviewsProps) {
-  // In a real app, this data would likely be joined in the query or fetched separately.
-  const getMovieTitle = (movieId: string) => {
-    // This will need to be replaced with a real data fetch or passed in props
-    return `Movie ID: ${movieId}`;
-  }
-
+  
   return (
     <Card>
       <CardHeader>
@@ -45,7 +45,11 @@ export default function UserReviews({ reviews }: UserReviewsProps) {
           <TableBody>
             {reviews.length > 0 ? reviews.map(review => (
               <TableRow key={review.id}>
-                <TableCell className="hidden sm:table-cell font-medium">{getMovieTitle(review.movieId)}</TableCell>
+                <TableCell className="hidden sm:table-cell font-medium">
+                  <Link href={`/movies/${review.movieId}`} className="hover:underline">
+                    {review.movie?.title || `Movie ID: ${review.movieId}`}
+                  </Link>
+                </TableCell>
                 <TableCell>
                   <StarRating rating={review.rating} size={16} isInteractive={false} />
                 </TableCell>

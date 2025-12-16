@@ -1,5 +1,5 @@
 
-import type { Movie, Review, User, UserActivity, TMDBSearchResult } from '@/lib/types';
+import type { Movie, Review, User, UserActivity, TMDBSearchResult, Streak } from '@/lib/types';
 
 // --- TMDB API ---
 const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;

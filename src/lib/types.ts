@@ -85,4 +85,9 @@ export interface TMDBSearchResult<T> {
   total_results: number;
 }
 
-    
+export interface Streak {
+    userId: string;
+    currentStreak: number;
+    startDate: string; // ISO string
+    lastActivityDate: string; // ISO string
+}
