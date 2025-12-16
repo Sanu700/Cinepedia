@@ -46,11 +46,14 @@ export async function getMovieById(id: string): Promise<Movie | undefined> {
   const movie: Movie = await fetchFromTMDB(`/movie/${id}`, { append_to_response: 'credits,runtime' });
   if (!movie) return undefined;
   
+  // In a real app, we would fetch reviews from Firestore. Here we use mock data.
+  const movieReviews = mockReviews.filter(review => review.movieId === id);
+
   return {
     ...movie,
     releaseYear: movie.release_date ? parseInt(movie.release_date.split('-')[0]) : 0,
     avgRating: movie.vote_average,
-    reviews: [],
+    reviews: movieReviews,
   };
 }
 
@@ -63,9 +66,9 @@ export async function getWatchProviders(movieId: number) {
 // --- Mock Data (to be phased out) ---
 
 export const mockUsers: User[] = [
-  { id: 'user-1', name: 'Alice', email: 'alice@example.com' },
-  { id: 'user-2', name: 'Bob', email: 'bob@example.com' },
-  { id: 'user-3', name: 'Charlie', email: 'charlie@example.com' },
+  { id: 'user-1', name: 'Alice', email: 'alice@example.com', stats: { totalReviews: 1, pollsParticipated: 5 } },
+  { id: 'user-2', name: 'Bob', email: 'bob@example.com', stats: { totalReviews: 6, pollsParticipated: 15 } },
+  { id: 'user-3', name: 'Charlie', email: 'charlie@example.com', stats: { totalReviews: 0, pollsParticipated: 2 } },
 ];
 
 export const mockReviews: Review[] = [
@@ -77,6 +80,16 @@ export const mockReviews: Review[] = [
     text: "A masterpiece of science fiction. The visuals were breathtaking and the story was deeply moving. A must-see for any fan of the genre.",
     createdAt: "2024-05-20T14:48:00.000Z",
     user: mockUsers.find(u => u.id === 'user-2')!,
+  },
+  {
+    id: 'review-2',
+    movieId: '27205', // Inception
+    userId: 'user-1',
+    rating: 4,
+    text: "This movie contains spoilers! The top was still spinning at the end, leaving it ambiguous. Great film, but the ending will make you think for days.",
+    createdAt: "2024-05-21T18:00:00.000Z",
+    hasSpoiler: true,
+    user: mockUsers.find(u => u.id === 'user-1')!,
   },
 ];
 

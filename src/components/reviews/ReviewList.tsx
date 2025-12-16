@@ -2,13 +2,65 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import StarRating from '@/components/reviews/StarRating';
-import type { Review } from '@/lib/types';
-import { User as UserIcon } from 'lucide-react';
+import type { Review, User } from '@/lib/types';
+import { User as UserIcon, Medal, Award, Vote } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import Spoiler from './Spoiler';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 interface ReviewListProps {
   reviews: Review[];
+}
+
+const UserBadges = ({ user }: { user: User }) => {
+  if (!user.stats) return null;
+
+  const badges = [
+    {
+      id: 'reviewer',
+      title: 'Reviewer (5+ reviews)',
+      icon: Medal,
+      condition: user.stats.totalReviews >= 5,
+    },
+    {
+      id: 'poll-addict',
+      title: 'Poll Addict (10+ votes)',
+      icon: Vote,
+      condition: user.stats.pollsParticipated >= 10,
+    },
+    {
+      id: 'first-review',
+      title: 'First Review',
+      icon: Award,
+      condition: user.stats.totalReviews >= 1 && user.stats.totalReviews < 5,
+    },
+  ];
+
+  const earnedBadges = badges.filter(b => b.condition);
+
+  if (earnedBadges.length === 0) return null;
+
+  return (
+    <TooltipProvider>
+      <div className="flex items-center gap-1.5">
+        {earnedBadges.map(badge => (
+          <Tooltip key={badge.id}>
+            <TooltipTrigger>
+              <badge.icon className="w-4 h-4 text-amber-400" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{badge.title}</p>
+            </TooltipContent>
+          </Tooltip>
+        ))}
+      </div>
+    </TooltipProvider>
+  )
 }
 
 export default function ReviewList({ reviews }: ReviewListProps) {
@@ -32,7 +84,10 @@ export default function ReviewList({ reviews }: ReviewListProps) {
               </AvatarFallback>
             </Avatar>
             <div className="flex-grow">
-              <p className="font-semibold">{review.user.name}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-semibold">{review.user.name}</p>
+                <UserBadges user={review.user} />
+              </div>
               <p className="text-xs text-muted-foreground">
                 {formatDistanceToNow(new Date(review.createdAt), { addSuffix: true })}
               </p>
@@ -53,5 +108,3 @@ export default function ReviewList({ reviews }: ReviewListProps) {
     </div>
   );
 }
-
-    
