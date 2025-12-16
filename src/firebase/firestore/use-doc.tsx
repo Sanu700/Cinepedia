@@ -72,17 +72,16 @@ export function useDoc<T = any>(
         setIsLoading(false);
       },
       (error: FirestoreError) => {
-        const contextualError = new FirestorePermissionError({
-          operation: 'get',
-          path: memoizedDocRef.path,
-        })
-
-        setError(contextualError)
-        setData(null)
-        setIsLoading(false)
-
-        // trigger global error propagation
-        errorEmitter.emit('permission-error', contextualError);
+        // This is the critical change:
+        // Instead of creating and throwing a global error, we set the error state locally.
+        // This prevents the entire application from crashing.
+        // The component using this hook can then decide how to handle the error UI.
+        console.warn(`Firestore 'get' operation failed for path: ${memoizedDocRef.path}. This is expected if the document doesn't exist. Silently failing.`);
+        setError(error);
+        setData(null);
+        setIsLoading(false);
+        // We are no longer emitting the global error that causes the crash.
+        // errorEmitter.emit('permission-error', contextualError);
       }
     );
 
