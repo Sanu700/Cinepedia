@@ -40,6 +40,11 @@ export async function signInWithGoogle() {
     
     return { success: "Logged in successfully!" };
   } catch (error: any) {
-    return { error: getAuthErrorMessage(error.code) };
+    const knownError = getAuthErrorMessage(error.code);
+    if (knownError !== "An unexpected error occurred. Please try again.") {
+      return { error: knownError };
+    }
+    // For unknown errors, return the actual firebase error message
+    return { error: error.message || "An unexpected error occurred. Please try again." };
   }
 }
