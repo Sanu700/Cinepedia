@@ -1,7 +1,9 @@
 
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useUser } from '@/firebase';
 import {
@@ -14,15 +16,41 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Logo from '@/components/shared/Logo';
-import { User as UserIcon, LogOut, LayoutDashboard, Film, Vote } from 'lucide-react';
+import { User as UserIcon, LogOut, LayoutDashboard, Film, Vote, Search } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import { getAuth } from 'firebase/auth';
+import { Input } from '../ui/input';
 
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
   <Button variant="ghost" asChild>
     <Link href={href}>{children}</Link>
   </Button>
 );
+
+const SearchBar = () => {
+    const [query, setQuery] = useState('');
+    const router = useRouter();
+
+    const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (query.trim()) {
+            router.push(`/search?query=${encodeURIComponent(query.trim())}`);
+        }
+    };
+
+    return (
+        <form onSubmit={handleSearch} className="relative w-full max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+                type="search"
+                placeholder="Search movies..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="pl-10"
+            />
+        </form>
+    );
+};
 
 export default function Header() {
   const { user, isUserLoading: loading } = useUser();
@@ -48,8 +76,12 @@ export default function Header() {
             </NavLink>
           </nav>
         </div>
+        
+        <div className="flex-1 flex justify-center px-4">
+          <SearchBar />
+        </div>
 
-        <div className="flex flex-1 items-center justify-end space-x-4">
+        <div className="flex items-center justify-end space-x-4">
           {loading ? (
              <Skeleton className="h-10 w-24" />
           ) : user ? (

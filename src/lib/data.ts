@@ -24,6 +24,22 @@ const fetchFromTMDB = async (path: string, params: Record<string, string> = {}) 
 
 // --- Data Fetching Functions ---
 
+export async function searchMovies(query: string): Promise<Movie[]> {
+    const data: TMDBSearchResult<Movie> = await fetchFromTMDB('/search/movie', {
+        query,
+        include_adult: 'false',
+        language: 'en-US',
+        page: '1',
+    });
+    if (!data || !data.results) return [];
+    return data.results.map(movie => ({
+        ...movie,
+        releaseYear: movie.release_date ? parseInt(movie.release_date.split('-')[0]) : 0,
+        avgRating: movie.vote_average,
+        reviews: [],
+    }));
+}
+
 export async function getMovies(params: Record<string, string> = {}): Promise<Movie[]> {
   const data: TMDBSearchResult<Movie> = await fetchFromTMDB('/discover/movie', {
       include_adult: 'false',
