@@ -1,18 +1,18 @@
-'use client';
+// IMPORTANT: This file is intended for server-side use only.
+// It is NOT available in client-side code.
 
 import { firebaseConfig } from '@/firebase/config';
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore'
 
-// This function is intended for CLIENT-SIDE use only.
+// This function is intended for SERVER-SIDE use only.
 export function initializeFirebase() {
-  if (getApps().length) {
-    return getSdks(getApp());
+  if (!getApps().length) {
+    const app = initializeApp(firebaseConfig);
+    return getSdks(app);
   }
-
-  const app = initializeApp(firebaseConfig);
-  return getSdks(app);
+  return getSdks(getApp());
 }
 
 function getSdks(firebaseApp: FirebaseApp) {
@@ -22,10 +22,3 @@ function getSdks(firebaseApp: FirebaseApp) {
     firestore: getFirestore(firebaseApp)
   };
 }
-
-export * from './provider';
-export * from './client-provider';
-export * from './firestore/use-collection';
-export * from './firestore/use-doc';
-export * from './errors';
-export * from './error-emitter';

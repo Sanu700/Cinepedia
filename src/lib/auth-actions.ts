@@ -1,0 +1,45 @@
+"use client";
+
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { initializeFirebase } from "@/firebase";
+import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
+
+const getAuthErrorMessage = (errorCode: string): string => {
+    switch (errorCode) {
+        case 'auth/popup-closed-by-user':
+            return 'Sign-in process was cancelled.';
+        case 'auth/account-exists-with-different-credential':
+            return 'An account already exists with the same email address but different sign-in credentials.';
+        default:
+            return "An unexpected error occurred. Please try again.";
+    }
+};
+
+export async function signInWithGoogle() {
+  const { auth, firestore } = initializeFirebase();
+  const provider = new GoogleAuthProvider();
+  try {
+    const userCredential = await signInWithPopup(auth, provider);
+    const user = userCredential.user;
+
+    // Check if user profile already exists
+    const userRef = doc(firestore, "users", user.uid);
+    const userDoc = await getDoc(userRef);
+
+    if (!userDoc.exists()) {
+      // Create a new user profile in Firestore
+      await setDoc(userRef, {
+        id: user.uid,
+        displayName: user.displayName,
+        email: user.email,
+        isEmailVerified: user.emailVerified,
+        creationTimestamp: serverTimestamp(),
+        trustScore: 0,
+      });
+    }
+    
+    return { success: "Logged in successfully!" };
+  } catch (error: any) {
+    return { error: getAuthErrorMessage(error.code) };
+  }
+}

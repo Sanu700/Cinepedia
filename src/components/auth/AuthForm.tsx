@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from 'react';
+import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -12,7 +12,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { LoginSchema, SignupSchema } from '@/schemas';
-import { login, signup, signInWithGoogle } from '@/lib/actions';
+import { login, signup } from '@/lib/actions';
+import { signInWithGoogle } from '@/lib/auth-actions';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Separator } from '../ui/separator';
@@ -60,8 +61,6 @@ export function AuthForm({ type }: AuthFormProps) {
         if (isLogin) {
           router.push('/dashboard');
         } else {
-          // On signup, Firebase automatically logs the user in.
-          // We can redirect them to a page that tells them to verify their email.
           router.push('/'); 
         }
       }
