@@ -40,20 +40,30 @@ export async function signup(values: z.infer<typeof SignupSchema>) {
 
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    await updateProfile(userCredential.user, { displayName: name });
+    const user = userCredential.user;
+    await updateProfile(user, { displayName: name });
 
     // Create user profile in Firestore
-    const userRef = doc(firestore, "users", userCredential.user.uid);
+    const userRef = doc(firestore, "users", user.uid);
     await setDoc(userRef, {
-        id: userCredential.user.uid,
+        id: user.uid,
         displayName: name,
         email: email,
         isEmailVerified: false,
         creationTimestamp: serverTimestamp(),
         trustScore: 0,
     });
+
+    // Create initial streak document for the new user
+    const streakRef = doc(firestore, "streaks", user.uid);
+    await setDoc(streakRef, {
+        userId: user.uid,
+        currentStreak: 0,
+        lastActivityDate: serverTimestamp(),
+        startDate: serverTimestamp(),
+    });
     
-    await sendEmailVerification(userCredential.user);
+    await sendEmailVerification(user);
     
     return { success: "Account created! Please check your email to verify your account." };
   } catch (error: any) {
@@ -150,5 +160,3 @@ export async function submitVote(pollId: string, movieId: string) {
          return { error: "Failed to cast vote. You may have already voted in this poll." };
     }
 }
-
-    

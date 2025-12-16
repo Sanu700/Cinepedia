@@ -1,3 +1,4 @@
+
 "use client";
 
 import { z } from "zod";
@@ -68,6 +69,15 @@ export async function signInWithGoogle() {
         isEmailVerified: user.emailVerified,
         creationTimestamp: serverTimestamp(),
         trustScore: 0,
+      });
+
+      // Create initial streak document for the new user
+      const streakRef = doc(firestore, "streaks", user.uid);
+      await setDoc(streakRef, {
+          userId: user.uid,
+          currentStreak: 0,
+          lastActivityDate: serverTimestamp(),
+          startDate: serverTimestamp(),
       });
     }
     
