@@ -43,7 +43,8 @@ export function AdminAuthForm() {
           title: 'Admin Login Successful',
           description: 'Redirecting to the dashboard...',
         });
-        router.push('/admin');
+        // Redirect to the main dashboard. The header will show the admin link if the user is an admin.
+        router.push('/dashboard');
       }
     });
   };
