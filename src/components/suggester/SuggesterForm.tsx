@@ -222,12 +222,12 @@ export default function SuggesterForm() {
                 ))}
             </div>
             <div className="flex flex-wrap gap-2 justify-center">
-              <Button onClick={handleSubmit} disabled={isPending}>
+              <Button type="button" onClick={handleSubmit} disabled={isPending}>
                 {isPending ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : null}
                 Show More Like This
               </Button>
-              <Button variant="secondary" onClick={reset}>Change Mood</Button>
-              <Button variant="outline" onClick={surpriseMe}>Surprise Me</Button>
+              <Button type="button" variant="secondary" onClick={reset}>Change Mood</Button>
+              <Button type="button" variant="outline" onClick={surpriseMe}>Surprise Me</Button>
             </div>
           </motion.div>
         )}
