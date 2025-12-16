@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useTransition, useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useUser } from '@/firebase';
 import { ReviewSchema } from '@/schemas';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -23,7 +23,7 @@ interface ReviewFormProps {
 }
 
 export default function ReviewForm({ movieId, movieSynopsis }: ReviewFormProps) {
-  const { user } = useAuth();
+  const { user } = useUser();
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   
@@ -33,7 +33,7 @@ export default function ReviewForm({ movieId, movieSynopsis }: ReviewFormProps) 
       rating: 0,
       text: '',
       movieId: movieId,
-      userId: user?.id,
+      userId: user?.uid,
     },
   });
 

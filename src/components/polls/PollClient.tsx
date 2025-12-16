@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Loader2, Check, LogIn, ThumbsUp } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@/firebase";
 import type { Poll } from "@/lib/types";
 import { placeholderImages, getPoll as fetchPoll } from "@/lib/data";
 import { submitVote } from "@/lib/actions";
@@ -56,7 +56,7 @@ const PollMovieCard = ({ movie, onVote, disabled, hasVoted, isWinner, percentage
 
 
 export default function PollClient() {
-    const { user } = useAuth();
+    const { user } = useUser();
     const [poll, setPoll] = useState<Poll | null>(null);
     const [userVote, setUserVote] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@/firebase";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import UserStats from "./UserStats";
@@ -35,7 +35,7 @@ const getUserDashboardData = async (userId: string): Promise<{
 
 
 export default function DashboardClient() {
-  const { user, loading } = useAuth();
+  const { user, isUserLoading: loading } = useUser();
   const router = useRouter();
   
   // A placeholder state for dashboard data
@@ -46,7 +46,7 @@ export default function DashboardClient() {
       router.push('/login');
     }
     if (user) {
-        getUserDashboardData(user.id).then(setDashboardData);
+        getUserDashboardData(user.uid).then(setDashboardData);
     }
   }, [user, loading, router]);
 
@@ -57,7 +57,7 @@ export default function DashboardClient() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-headline font-bold">Welcome, {user.name}!</h1>
+        <h1 className="text-4xl font-headline font-bold">Welcome, {user.displayName}!</h1>
         <p className="mt-2 text-lg text-muted-foreground">Here's a summary of your activity on Cinepedia.</p>
       </div>
 
