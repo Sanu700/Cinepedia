@@ -13,6 +13,9 @@ export interface Movie {
   posterId: string;
   reviews: Review[];
   avgRating: number;
+  country: 'USA' | 'India' | 'UK' | 'South Korea';
+  director: string;
+  genres: string[];
 }
 
 export interface Review {
@@ -35,7 +38,7 @@ export interface Poll {
 }
 
 export interface Vote {
-  id: string;
+  id:string;
   userId: string;
   pollId: string;
   votedForMovieId: string;

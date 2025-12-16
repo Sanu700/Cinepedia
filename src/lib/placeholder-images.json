@@ -43,6 +43,42 @@
       "imageHint": "comedy movie"
     },
     {
+      "id": "movie-7",
+      "description": "Poster for the movie 'RRR'.",
+      "imageUrl": "https://images.unsplash.com/photo-1616598343295-74b9a2425514?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxpbmRpYW4lMjBtb3ZpZXxlbnwwfHx8fDE3NjYyNjA3MDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "indian movie"
+    },
+    {
+      "id": "movie-8",
+      "description": "Poster for the movie 'Parasite'.",
+      "imageUrl": "https://images.unsplash.com/photo-1594950791244-99b1a5e1c312?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxrb3JlYW4lMjBtb3ZpZXxlbnwwfHx8fDE3NjYyNjA3MzV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "korean movie"
+    },
+    {
+      "id": "movie-9",
+      "description": "Poster for the movie 'Dune'.",
+      "imageUrl": "https://images.unsplash.com/photo-1608316475353-06187b5a8053?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhZHZlbnR1cmUlMjBtb3ZpZXxlbnwwfHx8fDE3NjYyNjA3ODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "adventure movie"
+    },
+    {
+      "id": "movie-10",
+      "description": "Poster for the movie '3 Idiots'.",
+      "imageUrl": "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxyb21hbnRpYyUyMGNvbWVkeSUyMG1vdmllfGVufDB8fHx8MTc2NjI2MDgxNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "comedy movie"
+    },
+    {
+      "id": "movie-11",
+      "description": "Poster for the movie 'Spirited Away'.",
+      "imageUrl": "https://images.unsplash.com/photo-1635805737451-c20532515b13?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxhbmltYXRpb24lMjBtb3ZpZXxlbnwwfHx8fDE3NjYyNjA4NDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "animation movie"
+    },
+    {
+      "id": "movie-12",
+      "description": "Poster for the movie 'The Dark Knight'.",
+      "imageUrl": "https://images.unsplash.com/photo-1611094622431-7538902b9388?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBtb3ZpZXxlbnwwfHx8fDE3NjYyNjA4NjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "superhero movie"
+    },
+    {
       "id": "avatar-1",
       "description": "User avatar 1.",
       "imageUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjU4NjUxMjF8MA&ixlib=rb-4.1.0&q=80&w=1080",
