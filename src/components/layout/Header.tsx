@@ -55,14 +55,14 @@ export default function Header() {
           ) : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                <button className="relative h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                   <Avatar className="h-10 w-10">
                     {user.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName ?? ''} />}
                     <AvatarFallback>
                       {userInitial ? userInitial : <UserIcon />}
                     </AvatarFallback>
                   </Avatar>
-                </Button>
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
