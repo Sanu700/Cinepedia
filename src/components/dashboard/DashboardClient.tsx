@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useUser } from "@/firebase";
@@ -9,6 +10,7 @@ import UserActivity from "./UserActivity";
 import { mockReviews, mockUserActivity } from "@/lib/data";
 import { Loader2 } from "lucide-react";
 import type { Review, UserActivity as UserActivityType } from "@/lib/types";
+import UserBadges from "./UserBadges";
 
 // In a real app, you would fetch this data from your backend based on the user's ID.
 const getUserDashboardData = async (userId: string): Promise<{
@@ -66,6 +68,8 @@ export default function DashboardClient() {
       </div>
 
       <UserStats {...dashboardData.stats} />
+      
+      <UserBadges stats={dashboardData.stats} />
 
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
