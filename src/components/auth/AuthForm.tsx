@@ -12,9 +12,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { LoginSchema, SignupSchema } from '@/schemas';
-import { login, signup } from '@/lib/actions';
+import { login, signup, signInWithGoogle } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
+import { Separator } from '../ui/separator';
+import { GoogleIcon } from '../icons/GoogleIcon';
 
 type AuthFormProps = {
   type: 'login' | 'signup';
@@ -24,6 +26,8 @@ export function AuthForm({ type }: AuthFormProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [isPending, startTransition] = useTransition();
+  const [isGooglePending, startGoogleTransition] = useTransition();
+
 
   const isLogin = type === 'login';
   const schema = isLogin ? LoginSchema : SignupSchema;
@@ -38,7 +42,6 @@ export function AuthForm({ type }: AuthFormProps) {
   const onSubmit = (values: z.infer<typeof schema>) => {
     startTransition(async () => {
       const action = isLogin ? login : signup;
-      // The `values` type needs to be asserted because `login` and `signup` expect different shapes.
       const result = await action(values as any); 
 
       if (result.error) {
@@ -54,10 +57,36 @@ export function AuthForm({ type }: AuthFormProps) {
           title: 'Success!',
           description: result.success,
         });
-        router.push('/dashboard');
+        if (isLogin) {
+          router.push('/dashboard');
+        } else {
+          // On signup, Firebase automatically logs the user in.
+          // We can redirect them to a page that tells them to verify their email.
+          router.push('/'); 
+        }
       }
     });
   };
+
+  const onGoogleSignIn = () => {
+    startGoogleTransition(async () => {
+        const result = await signInWithGoogle();
+        if (result.error) {
+            toast({
+                title: 'Google Sign-In Error',
+                description: result.error,
+                variant: 'destructive'
+            });
+        }
+        if (result.success) {
+            toast({
+                title: 'Success!',
+                description: 'Logged in with Google successfully.'
+            });
+            router.push('/dashboard');
+        }
+    })
+  }
 
   return (
     <div className="flex items-center justify-center py-12">
@@ -71,8 +100,24 @@ export function AuthForm({ type }: AuthFormProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="space-y-4">
+             <Button variant="outline" className="w-full" onClick={onGoogleSignIn} disabled={isPending || isGooglePending}>
+                {isGooglePending ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                    <GoogleIcon className="mr-2 h-5 w-5" />
+                )}
+                Sign {isLogin ? 'in' : 'up'} with Google
+            </Button>
+
+            <div className="flex items-center gap-4">
+                <Separator className="flex-1" />
+                <span className="text-xs text-muted-foreground">OR</span>
+                <Separator className="flex-1" />
+            </div>
+          </div>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-4">
               {!isLogin && (
                 <FormField
                   control={form.control}
@@ -81,7 +126,7 @@ export function AuthForm({ type }: AuthFormProps) {
                     <FormItem>
                       <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="John Doe" disabled={isPending} />
+                        <Input {...field} placeholder="John Doe" disabled={isPending || isGooglePending} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -99,7 +144,7 @@ export function AuthForm({ type }: AuthFormProps) {
                         {...field}
                         type="email"
                         placeholder="you@example.com"
-                        disabled={isPending}
+                        disabled={isPending || isGooglePending}
                       />
                     </FormControl>
                     <FormMessage />
@@ -113,13 +158,13 @@ export function AuthForm({ type }: AuthFormProps) {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input {...field} type="password" placeholder="••••••••" disabled={isPending} />
+                      <Input {...field} type="password" placeholder="••••••••" disabled={isPending || isGooglePending} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={isPending}>
+              <Button type="submit" className="w-full" disabled={isPending || isGooglePending}>
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isLogin ? 'Log In' : 'Sign Up'}
               </Button>

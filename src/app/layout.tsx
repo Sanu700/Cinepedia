@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import { AuthProvider } from '@/context/AuthContext';
+import { FirebaseClientProvider } from '@/firebase';
 import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/layout/Header';
 import { cn } from '@/lib/utils';
 import './globals.css';
+import VerificationBanner from '@/components/auth/VerificationBanner';
 
 export const metadata: Metadata = {
   title: 'Cinepedia',
@@ -23,13 +24,14 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className={cn('font-body antialiased min-h-screen flex flex-col')}>
-        <AuthProvider>
+        <FirebaseClientProvider>
           <Header />
+          <VerificationBanner />
           <main className="flex-grow container mx-auto px-4 py-8">
             {children}
           </main>
           <Toaster />
-        </AuthProvider>
+        </FirebaseClientProvider>
       </body>
     </html>
   );
