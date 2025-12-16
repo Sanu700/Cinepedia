@@ -202,47 +202,49 @@ export default function SuggesterForm() {
             className="space-y-8"
           >
              <div className="space-y-4">
-                {results.map((result) => (
-                    <motion.div key={result.tmdbId} variants={itemVariants}>
-                        <Card className="flex flex-col md:flex-row overflow-hidden">
-                             <div className="w-full md:w-40 flex-shrink-0 relative aspect-[2/3]">
-                                <Image src={getPosterURL(result.movie.poster_path)} alt={result.title} fill className="object-cover" />
-                             </div>
-                             <div className="p-6 flex flex-col justify-between">
-                                 <div>
-                                    <h3 className="text-2xl font-headline font-bold">{result.title} <span className="text-muted-foreground font-sans">({result.movie.release_date.split('-')[0]})</span></h3>
-                                    <p className="text-primary italic mt-2">"{result.reason}"</p>
-                                    <p className="text-foreground/80 mt-3 max-w-prose line-clamp-3">{result.movie.overview}</p>
-                                 </div>
-                                 <div className='mt-4'>
-                                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                        <div className="flex items-center gap-1">
-                                            <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                                            <span className="font-bold text-foreground">{result.movie.vote_average.toFixed(1)}</span>
-                                        </div>
-                                        <Separator orientation='vertical' className='h-4' />
-                                        <div className="flex items-center gap-1">
-                                            <Clock className="w-4 h-4" />
-                                            <span>{result.movie.runtime} min</span>
-                                        </div>
+                <AnimatePresence>
+                    {results.map((result) => (
+                        <motion.div key={result.tmdbId} variants={itemVariants} layout>
+                            <Card className="flex flex-col md:flex-row overflow-hidden">
+                                <div className="w-full md:w-40 flex-shrink-0 relative aspect-[2/3]">
+                                    <Image src={getPosterURL(result.movie.poster_path)} alt={result.title} fill className="object-cover" />
+                                </div>
+                                <div className="p-6 flex flex-col justify-between">
+                                    <div>
+                                        <h3 className="text-2xl font-headline font-bold">{result.title} <span className="text-muted-foreground font-sans">({result.movie.release_date.split('-')[0]})</span></h3>
+                                        <p className="text-primary italic mt-2">"{result.reason}"</p>
+                                        <p className="text-foreground/80 mt-3 max-w-prose line-clamp-3">{result.movie.overview}</p>
                                     </div>
-                                    <div className='mt-3'>
-                                        <h4 className='text-sm font-bold mb-2'>Watch on:</h4>
-                                        {result.movie.watchProviders && result.movie.watchProviders.flatrate && result.movie.watchProviders.flatrate.length > 0 ? (
-                                            <div className="flex items-center gap-2">
-                                                {result.movie.watchProviders.flatrate.slice(0, 4).map(p => (
-                                                    <Image key={p.provider_id} src={`https://image.tmdb.org/t/p/w92${p.logo_path}`} alt={p.provider_name} width={40} height={40} className="rounded-md" />
-                                                ))}
+                                    <div className='mt-4'>
+                                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                            <div className="flex items-center gap-1">
+                                                <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                                                <span className="font-bold text-foreground">{result.movie.vote_average.toFixed(1)}</span>
                                             </div>
-                                        ) : (
-                                            <p className="text-sm text-muted-foreground">Availability may vary by region.</p>
-                                        )}
+                                            <Separator orientation='vertical' className='h-4' />
+                                            <div className="flex items-center gap-1">
+                                                <Clock className="w-4 h-4" />
+                                                <span>{result.movie.runtime} min</span>
+                                            </div>
+                                        </div>
+                                        <div className='mt-3'>
+                                            <h4 className='text-sm font-bold mb-2'>Watch on:</h4>
+                                            {result.movie.watchProviders && result.movie.watchProviders.flatrate && result.movie.watchProviders.flatrate.length > 0 ? (
+                                                <div className="flex items-center gap-2">
+                                                    {result.movie.watchProviders.flatrate.slice(0, 4).map(p => (
+                                                        <Image key={p.provider_id} src={`https://image.tmdb.org/t/p/w92${p.logo_path}`} alt={p.provider_name} width={40} height={40} className="rounded-md" />
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <p className="text-sm text-muted-foreground">Availability may vary by region.</p>
+                                            )}
+                                        </div>
                                     </div>
-                                 </div>
-                             </div>
-                        </Card>
-                    </motion.div>
-                ))}
+                                </div>
+                            </Card>
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
             </div>
             <div className="flex flex-wrap gap-2 justify-center">
               <Button type="button" onClick={handleSubmit} disabled={isPending}>
