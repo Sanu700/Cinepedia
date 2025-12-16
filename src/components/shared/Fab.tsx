@@ -2,7 +2,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { WandSparklesIcon } from '@/components/icons/WandSparklesIcon';
+import { Sparkles } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -24,7 +24,7 @@ export default function Fab({ onClick }: FabProps) {
                     className="fixed bottom-8 right-8 h-16 w-16 rounded-full shadow-lg z-50"
                     size="icon"
                 >
-                    <WandSparklesIcon className="h-8 w-8" />
+                    <Sparkles className="h-8 w-8" />
                 </Button>
             </TooltipTrigger>
             <TooltipContent side="left">
