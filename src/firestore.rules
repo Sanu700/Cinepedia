@@ -83,7 +83,7 @@ service cloud.firestore {
      * is saved as a Firestore Timestamp object.
      */
     function isEstablishedUser() {
-      let userCreationTime = get(/databases/$(database)/documents/users/$(request.auth.uid)).data.creationTime;
+      let userCreationTime = get(/databases/$(database)/documents/users/$(request.auth.uid)).data.creationTimestamp;
       // Ensure creationTime is not null and is a timestamp before comparison.
       return userCreationTime != null && request.time > userCreationTime + duration.value(24, 'h');
     }
@@ -186,14 +186,12 @@ service cloud.firestore {
      * @description Defines rules for user activity streaks. A user can read and
      *              write their own streak data.
      * @path /streaks/{userId}
-     * @allow (read) A user can read their own streak document, even if it doesn't exist.
-     * @allow (write) A user can create or update their own streak document.
+     * @allow (get, write) A user manages their own streak document.
      * @deny (list) No user can list all streaks.
      */
     match /streaks/{userId} {
-      allow read: if isOwner(userId);
-      allow write: if isOwner(userId);
-      allow list: if false;
+        allow get, write: if isOwner(userId);
+        allow list: if false;
     }
   }
 }
