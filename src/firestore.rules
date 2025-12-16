@@ -1,0 +1,199 @@
+rules_version = '2';
+
+/**
+ * @file firestore.rules
+ * @description Security rules for the Cinepedia application.
+ *
+ * @section Core Philosophy
+ * This ruleset enforces a user-centric security model. Users have explicit ownership
+ * of their content, such as profiles, reviews, and votes. Public data like movies and
+ * polls are readable by anyone but are not writable by clients to ensure data integrity.
+ * A critical aspect of this model is the enforcement of email verification for any
+ * content-creation actions (writing reviews, voting) to build a trusted community.
+ *
+ * @section Data Structure
+ * The data structure is primarily flat to ensure simple, performant security rules.
+ * - /users/{userId}: Private user profiles, only accessible by the owner.
+ * - /movies/{movieId}: Public movie information, read-only for clients.
+ * - /reviews/{reviewId}: Public reviews, readable by all, but writes are restricted to the verified owner.
+ * - /polls/{pollId}: Public poll information, read-only for clients.
+ * - /polls/{pollId}/votes/{voteId}: User-specific votes. Creation is locked to verified users,
+ *   and the structure prevents duplicate votes.
+ * - /streaks/{userId}: User-specific activity streaks, writable only by the owner.
+ *
+ * @section Key Security Decisions
+ * - Default Deny: All paths are closed by default, and permissions are granted explicitly.
+ * - Email Verification: The `request.auth.token.email_verified` flag is a mandatory check for
+ *   all write operations that contribute content, enhancing the platform's trustworthiness.
+ * - Spam Prevention: New accounts (less than 24 hours old) are prohibited from writing reviews
+ *   to mitigate spam and low-quality content. This requires a `get` call to the user's profile.
+ * - User Isolation: Users are strictly forbidden from listing or viewing other users' private
+ *   profile data.
+ * - Admin-Managed Content: Collections like `/movies` and `/polls` are treated as read-only for
+ *   clients, assuming they are populated and managed through a trusted admin environment (e.g., Admin SDK).
+ *
+ * @section Denormalization for Authorization
+ * To create fast and simple rules, this ruleset relies on denormalized ownership fields.
+ * - The `/reviews` collection contains a `userId` field on each document. This allows for direct
+ *   ownership checks (`resource.data.userId == request.auth.uid`) without costly `get` calls to other collections.
+ * - The `/polls/{pollId}/votes` subcollection enforces a structure where the vote document ID must be the
+ *   user's UID (`/polls/{pollId}/votes/{userId}`). This pattern provides a simple, robust, and performant
+ *   way to prevent duplicate votes at the database level.
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // -------------------------------------------------------------------------
+    // Helper Functions
+    // -------------------------------------------------------------------------
+
+    /**
+     * Checks if a user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the authenticated user's UID matches the provided userId.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Checks for ownership on an existing document.
+     * Used for state-changing operations like update and delete.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+
+    /**
+     * Checks if the signed-in user has verified their email address.
+     * This is a critical check for content creation.
+     */
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    /**
+     * Checks if the user's account is older than 24 hours to prevent spam.
+     * NOTE: This requires that the 'creationTimestamp' field on the user's profile
+     * is saved as a Firestore Timestamp object.
+     */
+    function isEstablishedUser() {
+      let userCreationTime = get(/databases/$(database)/documents/users/$(request.auth.uid)).data.creationTime;
+      // Ensure creationTime is not null and is a timestamp before comparison.
+      return userCreationTime != null && request.time > userCreationTime + duration.value(24, 'h');
+    }
+
+    /**
+     * Validates all conditions for creating a new review.
+     * A user must be verified, have an account older than 24 hours,
+     * and correctly set the owner `userId` field in the review data.
+     */
+    function isValidNewReview() {
+      return isVerifiedUser() && isEstablishedUser() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // -------------------------------------------------------------------------
+    // Collection Rules
+    // -------------------------------------------------------------------------
+
+    /**
+     * @description Manages user profile documents. A user can create, view,
+     *              update, and delete their own profile, but cannot access others.
+     * @path /users/{userId}
+     * @allow (get) A user requests their own profile: /users/user_abc with auth.uid=user_abc.
+     * @deny (get) A user requests another user's profile: /users/user_xyz with auth.uid=user_abc.
+     * @deny (list) Any user attempts to list all profiles.
+     * @principle Restricts access to a user's own data tree.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isOwner(userId);
+    }
+
+    /**
+     * @description Defines rules for the publicly readable collection of movies.
+     *              This data is considered public and managed by admins, so client
+     *              writes are disabled.
+     * @path /movies/{movieId}
+     * @allow (get, list) Any user, signed in or not, can view movie data.
+     * @deny (create, update, delete) Any client attempts to modify the movie list.
+     * @principle Secures global content as read-only for clients.
+     */
+    match /movies/{movieId} {
+      allow get, list: if true;
+      allow write: if false;
+    }
+
+    /**
+     * @description Defines rules for movie reviews. Reviews are public to read,
+     *              but creating, updating, or deleting them requires ownership and
+     *              a verified email status.
+     * @path /reviews/{reviewId}
+     * @allow (create) An email-verified user with an account >24h old submits a review.
+     * @allow (update) The original author of a review edits their own review text.
+     * @deny (create) A user without a verified email attempts to submit a review.
+     * @deny (update) A user tries to edit someone else's review.
+     * @principle Enforces document ownership and community trust for writes.
+     */
+    match /reviews/{reviewId} {
+      allow get, list: if true;
+      allow create: if isValidNewReview();
+      allow update: if isExistingOwner(resource.data.userId) && isVerifiedUser() && request.resource.data.userId == resource.data.userId;
+      allow delete: if isExistingOwner(resource.data.userId);
+    }
+
+    /**
+     * @description Defines rules for the publicly readable collection of polls.
+     *              This data is managed by admins; client writes are disabled.
+     * @path /polls/{pollId}
+     * @allow (get, list) Any user, signed in or not, can view poll data.
+     * @deny (create, update, delete) Any client attempts to modify the poll list.
+     * @principle Secures global content as read-only for clients.
+     */
+    match /polls/{pollId} {
+      allow get, list: if true;
+      allow write: if false;
+
+      /**
+       * @description Defines rules for votes within a poll. This rule enforces
+       *              that the document ID for a vote MUST be the user's UID to
+       *              prevent duplicate votes. Votes are immutable.
+       * @path /polls/{pollId}/votes/{voteId}
+       * @allow (create) An email-verified user casts a vote, creating /polls/poll_123/votes/user_abc.
+       * @deny (create) The same user tries to create another vote document in the same poll.
+       * @deny (list) A user tries to list all votes to see who voted for what.
+       * @principle Enforces relational integrity (one vote per user) and data privacy.
+       */
+      match /votes/{userId} {
+        allow get: if isOwner(userId);
+        allow list: if false;
+        // A user can create a vote if they are the owner and have a verified email.
+        allow create: if isOwner(userId) && isVerifiedUser();
+        // Votes cannot be updated or deleted to maintain poll integrity.
+        allow update, delete: if false;
+      }
+    }
+    
+    /**
+     * @description Defines rules for user activity streaks. A user can read and
+     *              write their own streak data.
+     * @path /streaks/{userId}
+     * @allow (get) A user can read their own streak document.
+     * @allow (write) A user can create or update their own streak document.
+     * @deny (list) No user can list all streaks.
+     */
+    match /streaks/{userId} {
+        allow get: if isOwner(userId);
+        allow write: if isOwner(userId);
+        allow list: if false;
+    }
+  }
+}
