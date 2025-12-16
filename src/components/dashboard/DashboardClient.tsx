@@ -54,7 +54,8 @@ export default function DashboardClient() {
     return doc(firestore, 'streaks', user.uid);
   }, [firestore, user]);
 
-  // 4. Use useDoc to get the streak data
+  // 4. Use useDoc to get the streak data.
+  // The error from this hook is handled by defaulting streak to 0.
   const { data: streakData, isLoading: streakLoading } = useDoc<Streak>(streakRef);
 
   // Effect to fetch movie details when reviews are loaded
@@ -81,6 +82,7 @@ export default function DashboardClient() {
   // Polls participated is hard to query efficiently with the current structure.
   // We'll keep it mocked for now.
   const pollsParticipated = 12; 
+  // Gracefully handle missing streak data by defaulting to 0.
   const activityStreak = streakData?.currentStreak ?? 0;
 
   // 6. Generate activity feed from live reviews
