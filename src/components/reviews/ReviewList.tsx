@@ -24,7 +24,7 @@ export default function ReviewList({ reviews }: ReviewListProps) {
         <Card key={review.id}>
           <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
             <Avatar>
-              <AvatarImage src={review.user.avatarUrl} alt={review.user.name} />
+              {review.user.avatarUrl && <AvatarImage src={review.user.avatarUrl} alt={review.user.name} />}
               <AvatarFallback>
                 {review.user.name ? review.user.name.charAt(0).toUpperCase() : <UserIcon />}
               </AvatarFallback>
