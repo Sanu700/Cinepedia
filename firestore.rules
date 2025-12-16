@@ -19,6 +19,7 @@ rules_version = '2';
  * - /polls/{pollId}: Public poll information, read-only for clients.
  * - /polls/{pollId}/votes/{voteId}: User-specific votes. Creation is locked to verified users,
  *   and the structure prevents duplicate votes.
+ * - /streaks/{userId}: User-specific activity streaks, writable only by the owner.
  *
  * @section Key Security Decisions
  * - Default Deny: All paths are closed by default, and permissions are granted explicitly.
@@ -179,6 +180,18 @@ service cloud.firestore {
         // Votes cannot be updated or deleted to maintain poll integrity.
         allow update, delete: if false;
       }
+    }
+    
+    /**
+     * @description Defines rules for user activity streaks. A user can read and
+     *              write their own streak data.
+     * @path /streaks/{userId}
+     * @allow (get, write) A user manages their own streak document.
+     * @deny (list) No user can list all streaks.
+     */
+    match /streaks/{userId} {
+        allow get, write: if isOwner(userId);
+        allow list: if false;
     }
   }
 }

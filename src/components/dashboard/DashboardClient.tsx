@@ -14,7 +14,7 @@ import UserBadges from "./UserBadges";
 
 // In a real app, you would fetch this data from your backend based on the user's ID.
 const getUserDashboardData = async (userId: string): Promise<{
-    stats: { totalReviews: number, averageRating: number, pollsParticipated: number },
+    stats: { totalReviews: number, averageRating: number, pollsParticipated: number, activityStreak: number },
     reviews: Review[],
     activity: UserActivityType[]
 }> => {
@@ -29,6 +29,7 @@ const getUserDashboardData = async (userId: string): Promise<{
             totalReviews: userReviews.length,
             averageRating: avgRating,
             pollsParticipated: 12, // mock data
+            activityStreak: 3, // mock data
         },
         reviews: userReviews,
         activity: mockUserActivity,

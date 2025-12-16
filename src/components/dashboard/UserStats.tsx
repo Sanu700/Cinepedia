@@ -1,10 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Star, FileText, Vote } from 'lucide-react';
+import { Star, FileText, Vote, Flame } from 'lucide-react';
 
 interface UserStatsProps {
     totalReviews: number;
     averageRating: number;
     pollsParticipated: number;
+    activityStreak: number;
 }
 
 const StatCard = ({ title, value, icon: Icon }: { title: string, value: string | number, icon: React.ElementType }) => (
@@ -19,12 +20,13 @@ const StatCard = ({ title, value, icon: Icon }: { title: string, value: string |
     </Card>
 );
 
-export default function UserStats({ totalReviews, averageRating, pollsParticipated }: UserStatsProps) {
+export default function UserStats({ totalReviews, averageRating, pollsParticipated, activityStreak }: UserStatsProps) {
     return (
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <StatCard title="Total Reviews" value={totalReviews} icon={FileText} />
             <StatCard title="Average Rating" value={averageRating.toFixed(1)} icon={Star} />
             <StatCard title="Polls Voted" value={pollsParticipated} icon={Vote} />
+            <StatCard title="Activity Streak" value={`${activityStreak} days`} icon={Flame} />
         </div>
     );
 }
