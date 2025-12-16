@@ -9,91 +9,91 @@
     {
       "id": "movie-1",
       "description": "Poster for the movie 'Stellar Odyssey'.",
-      "imageUrl": "https://images.unsplash.com/photo-1534447677768-be436a0976f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1640127249308-098702574176?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzcGFjZSUyMG1vdmllfGVufDB8fHx8MTc2NTc3NDQ1MXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "space movie"
     },
     {
       "id": "movie-2",
       "description": "Poster for the movie 'Echoes of the Past'.",
-      "imageUrl": "https://images.unsplash.com/photo-1511875762322-634503739223?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1765243776997-5aa67435723f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkcmFtYSUyMG1vdmllfGVufDB8fHx8MTc2NTc2OTI3NXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "drama movie"
     },
     {
       "id": "movie-3",
       "description": "Poster for the movie 'The Last Stand'.",
-      "imageUrl": "https://images.unsplash.com/photo-1594904351111-a072f8ab525c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1514514188727-ff38e839635e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhY3Rpb24lMjBtb3ZpZXxlbnwwfHx8fDE3NjU4MDgyMTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "action movie"
     },
     {
       "id": "movie-4",
       "description": "Poster for the movie 'Cybernetic Dreams'.",
-      "imageUrl": "https://images.unsplash.com/photo-1581092446347-7d63b0f1a3a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1655006852875-7912caa28e8e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzY2ktZmklMjBtb3ZpZXxlbnwwfHx8fDE3NjU4MTE4NTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "sci-fi movie"
     },
     {
       "id": "movie-5",
       "description": "Poster for the movie 'Whispers in the Woods'.",
-      "imageUrl": "https://images.unsplash.com/photo-1559132204-a358a903b44b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1720273238003-079301a7e9b1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxteXN0ZXJ5JTIwbW92aWV8ZW58MHx8fHwxNzY1ODczMDgzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "mystery movie"
     },
     {
       "id": "movie-6",
       "description": "Poster for the movie 'City of Laughs'.",
-      "imageUrl": "https://images.unsplash.com/photo-1608174244521-3d715ab3ef58?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1760007416920-7074ed2da3d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb21lZHklMjBtb3ZpZXxlbnwwfHx8fDE3NjU4NTI5MjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "comedy movie"
     },
     {
       "id": "movie-7",
       "description": "Poster for the movie 'RRR'.",
-      "imageUrl": "https://images.unsplash.com/photo-1533619043865-1c2e2f32ff2f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1555802462-436aba8cf41d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxpbmRpYW4lMjBtb3ZpZXxlbnwwfHx8fDE3NjU4NzMwODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "indian movie"
     },
     {
       "id": "movie-8",
       "description": "Poster for the movie 'Parasite'.",
-      "imageUrl": "https://images.unsplash.com/photo-1594950791244-99b1a5e1c312?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1743685889437-210ad44b6c5f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxrb3JlYW4lMjBtb3ZpZXxlbnwwfHx8fDE3NjU4NzMwODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "korean movie"
     },
     {
       "id": "movie-9",
       "description": "Poster for the movie 'Dune'.",
-      "imageUrl": "https://images.unsplash.com/photo-1608316475353-06187b5a8053?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1644122583222-0875dc2ade8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhZHZlbnR1cmUlMjBtb3ZpZXxlbnwwfHx8fDE3NjU3NjkyNzV8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "adventure movie"
     },
     {
       "id": "movie-10",
       "description": "Poster for the movie '3 Idiots'.",
-      "imageUrl": "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1760007416920-7074ed2da3d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb21lZHklMjBtb3ZpZXxlbnwwfHx8fDE3NjU4NTI5MjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "comedy movie"
     },
     {
       "id": "movie-11",
       "description": "Poster for the movie 'Spirited Away'.",
-      "imageUrl": "https://images.unsplash.com/photo-1635805737451-c20532515b13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1758432320311-4fbe227550f4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YW5pbWF0aW9uJTIwbW92aWV8ZW58MHx8fHwxNzY1ODczMDgzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "animation movie"
     },
     {
       "id": "movie-12",
       "description": "Poster for the movie 'The Dark Knight'.",
-      "imageUrl": "https://images.unsplash.com/photo-1506729623303-b0e2b4a43f12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1761026148595-6fd7f4c76091?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBtb3ZpZXxlbnwwfHx8fDE3NjU4NzMwODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "superhero movie"
     },
     {
       "id": "avatar-1",
       "description": "User avatar 1.",
-      "imageUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjU4NjUxMjF8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "person portrait"
     },
     {
       "id": "avatar-2",
       "description": "User avatar 2.",
-      "imageUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=762&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1614283233556-f35b0c801ef1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2NTc3NTIwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "woman portrait"
     },
     {
       "id": "avatar-3",
       "description": "User avatar 3.",
-      "imageUrl": "https://images.unsplash.com/photo-1636377985931-898218afd306?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80",
+      "imageUrl": "https://images.unsplash.com/photo-1636377985931-898218afd306?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjU4MzUyOTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "man portrait"
     }
   ]
