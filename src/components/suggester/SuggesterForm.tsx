@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useTransition } from 'react';
@@ -69,6 +70,15 @@ export default function SuggesterForm() {
     setSelectedPreferences([]);
     setResults(null);
   }
+
+  const surpriseMe = () => {
+    if (results && results.length > 0) {
+      const randomIndex = Math.floor(Math.random() * results.length);
+      const surpriseMovie = results[randomIndex];
+      setResults([surpriseMovie]);
+    }
+  }
+
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -216,7 +226,7 @@ export default function SuggesterForm() {
                 Show More Like This
               </Button>
               <Button variant="secondary" onClick={reset}>Change Mood</Button>
-              <Button variant="outline">Surprise Me</Button>
+              <Button variant="outline" onClick={surpriseMe}>Surprise Me</Button>
             </div>
           </motion.div>
         )}
