@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "hero",
-      "description": "A vibrant, abstract representation of cinema and movies.",
-      "imageUrl": "https://images.unsplash.com/photo-1679228135500-030392d815f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjaW5lbWElMjBhYnN0cmFjdHxlbnwwfHx8fDE3NjU4NjYxODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "cinema abstract"
+      "description": "A dark movie theater with the screen brightly lit.",
+      "imageUrl": "https://images.unsplash.com/photo-1489599849927-2ee91e38a4ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjaW5lbWF8ZW58MHx8fHwxNzY1ODcyNzIyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cinema movie"
     },
     {
       "id": "movie-1",
