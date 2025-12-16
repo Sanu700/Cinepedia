@@ -111,7 +111,7 @@ export default function DashboardClient() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-headline font-bold">Welcome, {user.displayName}!</h1>
+        <h1 className="text-4xl font-headline font-bold">Welcome, {user.displayName || user.email}!</h1>
         <p className="mt-2 text-lg text-muted-foreground">Here's a summary of your activity on Cinepedia.</p>
       </div>
 
