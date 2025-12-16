@@ -34,23 +34,10 @@ const preferences = [
 ] as const;
 
 const MovieSuggesterInputSchema = z.object({
-  mood: z.enum(moods).describe('The user\'s current mood.'),
+  mood: z.enum(moods).describe("The user's current mood."),
   preferences: z.array(z.enum(preferences)).optional().describe('Optional user preferences.'),
 });
 export type MovieSuggesterInput = z.infer<typeof MovieSuggesterInputSchema>;
-
-// Internal schema for AI to generate search parameters
-const TMDBFilterSchema = z.object({
-  genres: z.array(z.number()).describe('A list of TMDB genre IDs.'),
-  keywords: z.array(z.string()).describe('A list of keywords to search for.'),
-  ratingThreshold: z.number().min(0).max(10).describe('The minimum TMDB rating.'),
-  yearRange: z
-    .object({
-      start: z.number().optional(),
-      end: z.number().optional(),
-    })
-    .optional(),
-});
 
 const MovieSuggestionSchema = z.object({
   tmdbId: z.number().describe('The TMDB ID of the movie.'),
@@ -58,137 +45,98 @@ const MovieSuggestionSchema = z.object({
   reason: z.string().describe('A short, compelling reason (1-2 sentences) why this movie fits the user\'s mood and preferences.'),
 });
 
-// This is a single suggestion item, enhanced with the full movie object
-export type SingleMovieSuggestion = z.infer<typeof MovieSuggestionSchema> & { movie: Movie };
-
-// The final output of the flow is an object containing an array of these suggestions
 const MovieSuggesterOutputSchema = z.object({
-  suggestions: z.array(MovieSuggestionSchema.extend({
-      // We don't need to define the movie object in the zod schema for the AI,
-      // as it's attached in our code, but it's part of the final return type.
-  })),
+  suggestions: z.array(MovieSuggestionSchema),
 });
 export type MovieSuggesterOutput = {
-  suggestions: SingleMovieSuggestion[];
+  suggestions: (z.infer<typeof MovieSuggestionSchema> & { movie: Movie })[];
 };
-
 
 // Main exported function to be called from the client
 export async function suggestMovies(input: MovieSuggesterInput): Promise<MovieSuggesterOutput> {
   return movieSuggesterFlow(input);
 }
 
-
-// 1. AI Flow to map Mood/Preferences to TMDB Filters
-const filterGeneratorPrompt = ai.definePrompt({
-  name: 'movieFilterGeneratorPrompt',
-  input: { schema: MovieSuggesterInputSchema },
-  output: { schema: TMDBFilterSchema },
-  prompt: `You are an expert movie curator. Your task is to translate a user's mood and preferences into a set of filters for querying The Movie Database (TMDB).
+// Simplified prompt to generate suggestions directly from a movie list
+const suggestionGeneratorPrompt = ai.definePrompt({
+  name: 'movieSuggestionGeneratorPrompt',
+  input: { schema: z.object({
+      movies: z.array(z.object({
+          id: z.number(),
+          title: z.string(),
+          overview: z.string(),
+      })),
+      mood: z.string(),
+      preferences: z.array(z.string()),
+  })},
+  output: { schema: MovieSuggesterOutputSchema },
+  prompt: `You are an expert movie curator. Given a list of movies, select up to 5 that best match the user's mood and preferences. For each selected movie, provide a compelling reason (1-2 sentences) explaining why it's a great fit.
 
   User's Mood: {{{mood}}}
   User's Preferences: {{#if preferences}}{{#each preferences}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}{{else}}None{{/if}}
 
-  Based on this, generate a list of relevant TMDB genre IDs, keywords, a minimum rating threshold, and an optional year range.
-  - For 'Popular', prefer recent years. For 'Hidden Gem', prefer older years or lower vote counts.
-  - For 'Highly Rated', set a higher ratingThreshold.
-  - 'No heavy thinking' should avoid complex genres like psychological thrillers.
+  Available Movies:
+  {{#each movies}}
+  - ID: {{{id}}}, Title: {{{title}}}, Synopsis: {{{overview}}}
+  {{/each}}
 
-  Here are some TMDB Genre IDs for your reference:
-  - Action: 28
-  - Adventure: 12
-  - Animation: 16
-  - Comedy: 35
-  - Crime: 80
-  - Documentary: 99
-  - Drama: 18
-  - Family: 10751
-  - Fantasy: 14
-  - History: 36
-  - Horror: 27
-  - Music: 10402
-  - Mystery: 9648
-  - Romance: 10749
-  - Science Fiction: 878
-  - Thriller: 53
-  - War: 10752
-  - Western: 37
-
-  Provide a diverse but relevant set of filters.`,
+  Your response must be a JSON object containing a 'suggestions' array. Each item in the array must have 'tmdbId', 'title', and 'reason'.
+  `
 });
 
-// 2. AI Flow to generate reasons for each movie
-const reasonGeneratorPrompt = ai.definePrompt({
-    name: 'movieReasonGeneratorPrompt',
-    input: { schema: z.object({
-        movieTitle: z.string(),
-        movieSynopsis: z.string(),
-        mood: z.string(),
-        preferences: z.array(z.string()),
-    })},
-    output: { schema: z.object({ reason: z.string() }) },
-    prompt: `You are a movie recommendation assistant. Given a movie title, its synopsis, and the user's mood/preferences, write a short, compelling reason (1-2 sentences) why this specific movie is a great fit.
-
-    Movie: {{{movieTitle}}}
-    Synopsis: {{{movieSynopsis}}}
-    User's Mood: {{{mood}}}
-    User's Preferences: {{#if preferences}}{{#each preferences}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}{{else}}None{{/if}}
-
-    Example output: "With its breathtaking visuals and mind-bending plot, this sci-fi epic is the perfect escape if you're looking for something to challenge your perspective."
-    `
-});
-
-
-// 3. The main orchestrating flow
+// The main orchestrating flow
 const movieSuggesterFlow = ai.defineFlow(
   {
     name: 'movieSuggesterFlow',
     inputSchema: MovieSuggesterInputSchema,
-    outputSchema: MovieSuggesterOutputSchema,
+    outputSchema: z.any(), // Allow for flexible output before final structuring
   },
   async (input): Promise<MovieSuggesterOutput> => {
-    // Step 1: Generate TMDB filters from mood
-    const { output: filters } = await filterGeneratorPrompt(input);
-    if (!filters) {
-      throw new Error('Could not generate movie filters.');
-    }
-
-    // Step 2: Fetch movies from TMDB using the generated filters
+    // Step 1: Fetch a broad list of popular movies. The AI will do the filtering.
     const movies = await getMovies({
-        with_genres: filters.genres.join('|'),
-        with_keywords: filters.keywords.join('|'),
-        'vote_average.gte': String(filters.ratingThreshold),
-        sort_by: input.preferences?.includes('Popular') ? 'popularity.desc' : 'vote_average.desc',
+        sort_by: 'popularity.desc',
+        'vote_count.gte': '200', // Filter out movies with very few votes
     });
 
-    const topMovies = movies.slice(0, 5); // Limit to 5 suggestions for now
-
-    // Step 3: For each movie, generate a personalized reason and fetch providers
-    const suggestionsWithReasons = await Promise.all(
-        topMovies.map(async (movie) => {
-            const [reasonResult, providers] = await Promise.all([
-                reasonGeneratorPrompt({
-                    movieTitle: movie.title,
-                    movieSynopsis: movie.overview,
-                    mood: input.mood,
-                    preferences: input.preferences || [],
-                }),
-                getWatchProviders(movie.id)
-            ]);
-
-            const reason = reasonResult.output?.reason || 'A great choice for your current mood!';
-
-            return {
-                tmdbId: movie.id,
-                title: movie.title,
-                reason: reason,
-                movie: { ...movie, watchProviders: providers }, // Attach full movie object with providers
-            };
-        })
-    );
+    if (!movies || movies.length === 0) {
+        throw new Error("Could not fetch movies from the data source.");
+    }
     
+    // We only need a subset of movie data for the prompt to save tokens
+    const movieDataForPrompt = movies.slice(0, 50).map(m => ({
+        id: m.id,
+        title: m.title,
+        overview: m.overview
+    }));
+
+    // Step 2: Generate suggestions and reasons in a single AI call
+    const { output: suggestionResult } = await suggestionGeneratorPrompt({
+        movies: movieDataForPrompt,
+        mood: input.mood,
+        preferences: input.preferences || [],
+    });
+
+    if (!suggestionResult || !suggestionResult.suggestions || suggestionResult.suggestions.length === 0) {
+      return { suggestions: [] };
+    }
+    
+    // Step 3: Hydrate the AI suggestions with full movie data and watch providers
+    const finalSuggestions = await Promise.all(
+      suggestionResult.suggestions.map(async (suggestion) => {
+        const fullMovie = movies.find(m => m.id === suggestion.tmdbId);
+        if (!fullMovie) return null;
+
+        const providers = await getWatchProviders(fullMovie.id);
+        
+        return {
+          ...suggestion,
+          movie: { ...fullMovie, watchProviders: providers },
+        };
+      })
+    );
+
     return {
-        suggestions: suggestionsWithReasons,
+      suggestions: finalSuggestions.filter((s): s is NonNullable<typeof s> => s !== null),
     };
   }
 );
