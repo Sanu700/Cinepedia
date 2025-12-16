@@ -1,8 +1,7 @@
 
-
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -42,12 +41,19 @@ export default function SuggesterForm() {
   const [results, setResults] = useState<MovieSuggesterOutput['suggestions'] | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const preferencesRef = useRef<HTMLDivElement>(null);
 
 
   const handleMoodSelect = (mood: MovieSuggesterInput['mood']) => {
     setSelectedMood(mood);
     setStep('preferences');
   };
+  
+  useEffect(() => {
+    if (step === 'preferences' && preferencesRef.current) {
+        preferencesRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [step]);
 
   const handlePreferenceToggle = (prefId: (typeof preferences)[number]['id']) => {
     setSelectedPreferences(prev =>
@@ -143,6 +149,7 @@ export default function SuggesterForm() {
         {step === 'preferences' && (
           <motion.div
             key="preferences"
+            ref={preferencesRef}
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -201,7 +208,7 @@ export default function SuggesterForm() {
             exit="exit"
             className="space-y-8"
           >
-             <div className="space-y-4">
+             <motion.div className="space-y-4" variants={containerVariants}>
                 <AnimatePresence>
                     {results.map((result) => (
                         <motion.div key={result.tmdbId} variants={itemVariants} layout>
@@ -245,7 +252,7 @@ export default function SuggesterForm() {
                         </motion.div>
                     ))}
                 </AnimatePresence>
-            </div>
+            </motion.div>
             <div className="flex flex-wrap gap-2 justify-center">
               <Button type="button" onClick={handleSubmit} disabled={isPending}>
                 {isPending ? <Loader2 className='mr-2 h-4 w-4 animate-spin' /> : null}

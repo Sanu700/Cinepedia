@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MotionCard, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Film, Star, Vote } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -51,7 +51,11 @@ export default function Home() {
           Everything you need for your cinematic journey.
         </p>
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card className="text-left transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-primary/10">
+          <MotionCard 
+            className="text-left"
+            whileHover={{ y: -8, boxShadow: "0 10px 20px hsla(var(--primary)/0.2)" }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
             <CardHeader>
               <div className="flex items-center gap-4">
                 <div className="bg-primary/10 p-3 rounded-md">
@@ -66,8 +70,12 @@ export default function Home() {
                 share your own thoughts with our rating system.
               </p>
             </CardContent>
-          </Card>
-          <Card className="text-left transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-primary/10">
+          </MotionCard>
+           <MotionCard 
+            className="text-left"
+            whileHover={{ y: -8, boxShadow: "0 10px 20px hsla(var(--primary)/0.2)" }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
             <CardHeader>
               <div className="flex items-center gap-4">
                 <div className="bg-primary/10 p-3 rounded-md">
@@ -82,8 +90,12 @@ export default function Home() {
                 matchups and see how the community voted.
               </p>
             </CardContent>
-          </Card>
-          <Card className="text-left transform transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-primary/10">
+          </MotionCard>
+          <MotionCard 
+            className="text-left"
+            whileHover={{ y: -8, boxShadow: "0 10px 20px hsla(var(--primary)/0.2)" }}
+            transition={{ type: 'spring', stiffness: 300 }}
+          >
             <CardHeader>
               <div className="flex items-center gap-4">
                 <div className="bg-primary/10 p-3 rounded-md">
@@ -94,11 +106,10 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Get smart suggestions to enhance your reviews, powered by AI.
-                Make your feedback more engaging and insightful.
+                Get smart suggestions to enhance your reviews and find what to watch next based on your mood.
               </p>
             </CardContent>
-          </Card>
+          </MotionCard>
         </div>
       </section>
     </div>

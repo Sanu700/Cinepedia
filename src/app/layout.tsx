@@ -5,12 +5,15 @@ import type { Metadata } from 'next';
 import { FirebaseClientProvider } from '@/firebase';
 import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 import { cn } from '@/lib/utils';
 import './globals.css';
 import VerificationBanner from '@/components/auth/VerificationBanner';
 import Fab from '@/components/shared/Fab';
 import { useState } from 'react';
 import MovieSuggester from '@/components/suggester/MovieSuggester';
+import { AnimatePresence, motion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 
 const metadata: Metadata = {
   title: 'Cinepedia',
@@ -23,6 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [suggesterOpen, setSuggesterOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <html lang="en" className="dark">
@@ -38,12 +42,24 @@ export default function RootLayout({
           <Header />
           <VerificationBanner />
           <main className="flex-grow container mx-auto px-4 py-8">
-            {children}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={pathname}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+              >
+                {children}
+              </motion.div>
+            </AnimatePresence>
           </main>
           <Toaster />
           <Fab onClick={() => setSuggesterOpen(true)} />
           <MovieSuggester open={suggesterOpen} onOpenChange={setSuggesterOpen} />
+          <Footer />
         </FirebaseClientProvider>
       </body>
     </html>
   );
+}

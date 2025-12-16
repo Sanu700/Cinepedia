@@ -46,6 +46,9 @@
   * {
     @apply border-border;
   }
+  html {
+    @apply scroll-smooth;
+  }
   body {
     @apply bg-background text-foreground;
     background-image: radial-gradient(circle at 15% 20%, hsl(var(--primary) / 0.15), transparent 40%),
