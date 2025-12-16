@@ -9,73 +9,73 @@
     {
       "id": "movie-1",
       "description": "Poster for the movie 'Stellar Odyssey'.",
-      "imageUrl": "https://images.unsplash.com/photo-1640127249308-098702574176?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzcGFjZSUyMG1vdmllfGVufDB8fHx8MTc2NTc3NDQ1MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "space movie"
     },
     {
       "id": "movie-2",
       "description": "Poster for the movie 'Echoes of the Past'.",
-      "imageUrl": "https://images.unsplash.com/photo-1765243776997-5aa67435723f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkcmFtYSUyMG1vdmllfGVufDB8fHx8MTc2NTc2OTI3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1585902422512-5859c24933a3?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "drama movie"
     },
     {
       "id": "movie-3",
       "description": "Poster for the movie 'The Last Stand'.",
-      "imageUrl": "https://images.unsplash.com/photo-1514514188727-ff38e839635e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhY3Rpb24lMjBtb3ZpZXxlbnwwfHx8fDE3NjU4MDgyMTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "action movie"
     },
     {
       "id": "movie-4",
       "description": "Poster for the movie 'Cybernetic Dreams'.",
-      "imageUrl": "https://images.unsplash.com/photo-1655006852875-7912caa28e8e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzY2ktZmklMjBtb3ZpZXxlbnwwfHx8fDE3NjU4MTE4NTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "sci-fi movie"
     },
     {
       "id": "movie-5",
       "description": "Poster for the movie 'Whispers in the Woods'.",
-      "imageUrl": "https://images.unsplash.com/photo-1720273238003-079301a7e9b1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxteXN0ZXJ5JTIwbW92aWV8ZW58MHx8fHwxNzY1ODczMDgzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1594786523944-a73a72a8iqiv?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "mystery movie"
     },
     {
       "id": "movie-6",
       "description": "Poster for the movie 'City of Laughs'.",
-      "imageUrl": "https://images.unsplash.com/photo-1760007416920-7074ed2da3d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb21lZHklMjBtb3ZpZXxlbnwwfHx8fDE3NjU4NTI5MjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1616503603332-34352f20f2bc?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "comedy movie"
     },
     {
       "id": "movie-7",
       "description": "Poster for the movie 'RRR'.",
-      "imageUrl": "https://images.unsplash.com/photo-1555802462-436aba8cf41d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxpbmRpYW4lMjBtb3ZpZXxlbnwwfHx8fDE3NjU4NzMwODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1612036782180-6f0b6cd84627?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "indian movie"
     },
     {
       "id": "movie-8",
       "description": "Poster for the movie 'Parasite'.",
-      "imageUrl": "https://images.unsplash.com/photo-1743685889437-210ad44b6c5f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxrb3JlYW4lMjBtb3ZpZXxlbnwwfHx8fDE3NjU4NzMwODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1590179092 ratified?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "korean movie"
     },
     {
       "id": "movie-9",
       "description": "Poster for the movie 'Dune'.",
-      "imageUrl": "https://images.unsplash.com/photo-1644122583222-0875dc2ade8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxhZHZlbnR1cmUlMjBtb3ZpZXxlbnwwfHx8fDE3NjU3NjkyNzV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1598449033479-9c5931a38b8e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "adventure movie"
     },
     {
       "id": "movie-10",
       "description": "Poster for the movie '3 Idiots'.",
-      "imageUrl": "https://images.unsplash.com/photo-1760007416920-7074ed2da3d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb21lZHklMjBtb3ZpZXxlbnwwfHx8fDE3NjU4NTI5MjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1533613220915-609f661a3fe1?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "comedy movie"
     },
     {
       "id": "movie-11",
       "description": "Poster for the movie 'Spirited Away'.",
-      "imageUrl": "https://images.unsplash.com/photo-1758432320311-4fbe227550f4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YW5pbWF0aW9uJTIwbW92aWV8ZW58MHx8fHwxNzY1ODczMDgzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1585932221469-817e9a8b8b09?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "animation movie"
     },
     {
       "id": "movie-12",
       "description": "Poster for the movie 'The Dark Knight'.",
-      "imageUrl": "https://images.unsplash.com/photo-1761026148595-6fd7f4c76091?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcmhlcm8lMjBtb3ZpZXxlbnwwfHx8fDE3NjU4NzMwODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "superhero movie"
     },
     {
