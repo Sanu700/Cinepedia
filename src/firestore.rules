@@ -186,13 +186,11 @@ service cloud.firestore {
      * @description Defines rules for user activity streaks. A user can read and
      *              write their own streak data.
      * @path /streaks/{userId}
-     * @allow (get) A user can read their own streak document.
-     * @allow (write) A user can create or update their own streak document.
+     * @allow (read, write) A user manages their own streak document.
      * @deny (list) No user can list all streaks.
      */
     match /streaks/{userId} {
-        allow get: if isOwner(userId);
-        allow write: if isOwner(userId);
+        allow read, write: if isOwner(userId);
         allow list: if false;
     }
   }
