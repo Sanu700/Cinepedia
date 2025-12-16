@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useTransition } from 'react';
@@ -11,6 +12,7 @@ import { suggestMovies, type MovieSuggesterInput, type SingleMovieSuggestion } f
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Separator } from '../ui/separator';
+import { useToast } from '@/hooks/use-toast';
 
 const moods = [
   'Chill & Relaxed', 'Sad / Emotional', 'Romantic', 'Stressed / Angry',
@@ -38,6 +40,8 @@ export default function SuggesterForm() {
   const [selectedPreferences, setSelectedPreferences] = useState<MovieSuggesterInput['preferences']>([]);
   const [results, setResults] = useState<SingleMovieSuggestion[] | null>(null);
   const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
+
 
   const handleMoodSelect = (mood: MovieSuggesterInput['mood']) => {
     setSelectedMood(mood);
@@ -54,12 +58,32 @@ export default function SuggesterForm() {
     if (!selectedMood) return;
     setStep('loading');
     startTransition(async () => {
-      const response = await suggestMovies({
-        mood: selectedMood,
-        preferences: selectedPreferences,
-      });
-      setResults(response.suggestions);
-      setStep('results');
+      try {
+        const response = await suggestMovies({
+          mood: selectedMood,
+          preferences: selectedPreferences,
+        });
+
+        if (response && response.suggestions && response.suggestions.length > 0) {
+          setResults(response.suggestions);
+          setStep('results');
+        } else {
+          toast({
+            title: "No suggestions found",
+            description: "We couldn't find any movies for that combination. Please try a different mood.",
+            variant: "default"
+          });
+          reset();
+        }
+      } catch (error) {
+        console.error("Movie suggestion error:", error);
+        toast({
+          title: "AI Service Error",
+          description: "The movie suggestion service is currently unavailable. Please try again in a moment.",
+          variant: "destructive",
+        });
+        reset(); // Go back to the initial state
+      }
     });
   };
   
