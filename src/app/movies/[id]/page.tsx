@@ -1,7 +1,6 @@
-
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { getMovieById, placeholderImages } from '@/lib/data';
+import { getMovieById } from '@/lib/data';
 import { Star } from 'lucide-react';
 import ReviewList from '@/components/reviews/ReviewList';
 import ReviewForm from '@/components/reviews/ReviewForm';
@@ -13,6 +12,10 @@ interface MoviePageProps {
   };
 }
 
+const getPosterURL = (path: string | null) => {
+    return path ? `https://image.tmdb.org/t/p/w500${path}` : null;
+}
+
 export default async function MoviePage({ params }: MoviePageProps) {
   const movie = await getMovieById(params.id);
 
@@ -20,26 +23,25 @@ export default async function MoviePage({ params }: MoviePageProps) {
     notFound();
   }
 
-  const poster = placeholderImages.find(p => p.id === movie.posterId);
+  const posterUrl = getPosterURL(movie.poster_path);
 
   return (
     <div className="space-y-12">
       <section className="flex flex-col md:flex-row gap-8 md:gap-12">
         <div className="w-full md:w-1/3 lg:w-1/4 flex-shrink-0">
           <div className="aspect-[2/3] relative rounded-lg overflow-hidden shadow-lg">
-             {poster ? (
+             {posterUrl ? (
                 <Image
-                    src={poster.imageUrl}
+                    src={posterUrl}
                     alt={`Poster for ${movie.title}`}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-                    data-ai-hint={poster.imageHint}
                     priority
                 />
             ) : (
                 <div className="bg-muted flex items-center justify-center h-full">
-                    <span className="text-muted-foreground">No Image</span>
+                    <span className="text-muted-foreground text-center p-4">{movie.title}</span>
                 </div>
             )}
           </div>
@@ -52,13 +54,13 @@ export default async function MoviePage({ params }: MoviePageProps) {
           <div className="flex items-center gap-3 mt-4 text-amber-400">
             <Star className="w-7 h-7 fill-current" />
             <span className="font-bold text-3xl text-foreground">{movie.avgRating > 0 ? movie.avgRating.toFixed(1) : 'N/A'}</span>
-            <span className="text-sm text-muted-foreground self-end">/ 5</span>
+            <span className="text-sm text-muted-foreground self-end">/ 10</span>
           </div>
           
           <div className="mt-8">
             <h2 className="text-2xl font-headline font-bold">Synopsis</h2>
             <p className="mt-2 text-foreground/90 leading-relaxed max-w-prose">
-              {movie.synopsis}
+              {movie.overview}
             </p>
           </div>
         </div>
@@ -74,7 +76,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
       <Separator />
 
       <section id="write-review">
-        <ReviewForm movieId={movie.id} movieSynopsis={movie.synopsis} />
+        <ReviewForm movieId={String(movie.id)} movieSynopsis={movie.overview} />
       </section>
     </div>
   );

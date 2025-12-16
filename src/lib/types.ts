@@ -6,16 +6,19 @@ export interface User {
 }
 
 export interface Movie {
-  id: string;
+  id: number;
+  tmdbId?: number;
   title: string;
-  synopsis: string;
+  overview: string;
+  synopsis?: string; // For compatibility
+  release_date: string;
   releaseYear: number;
-  posterId: string;
-  reviews: Review[];
+  poster_path: string | null;
+  backdrop_path: string | null;
+  vote_average: number;
   avgRating: number;
-  country: 'USA' | 'India' | 'UK' | 'South Korea' | 'Japan';
-  director: string;
-  genres: string[];
+  genres: { id: number, name: string }[];
+  reviews: Review[]; // To be populated from Firestore
 }
 
 export interface Review {
@@ -52,9 +55,9 @@ export interface UserActivity {
   link: string;
 }
 
-export interface ImagePlaceholder {
-  id: string;
-  description: string;
-  imageUrl: string;
-  imageHint: string;
+export interface TMDBSearchResult<T> {
+  page: number;
+  results: T[];
+  total_pages: number;
+  total_results: number;
 }

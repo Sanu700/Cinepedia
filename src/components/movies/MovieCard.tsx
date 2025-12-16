@@ -3,14 +3,18 @@ import Image from 'next/image';
 import { MotionCard } from '@/components/ui/card';
 import { Star } from 'lucide-react';
 import type { Movie } from '@/lib/types';
-import { placeholderImages } from '@/lib/data';
+import { Skeleton } from '../ui/skeleton';
 
 interface MovieCardProps {
   movie: Movie;
 }
 
+const getPosterURL = (path: string | null) => {
+    return path ? `https://image.tmdb.org/t/p/w500${path}` : '/no-poster.svg';
+}
+
 export default function MovieCard({ movie }: MovieCardProps) {
-  const poster = placeholderImages.find(p => p.id === movie.posterId);
+  const posterUrl = getPosterURL(movie.poster_path);
 
   return (
     <Link href={`/movies/${movie.id}`} className="group block">
@@ -19,23 +23,22 @@ export default function MovieCard({ movie }: MovieCardProps) {
             whileHover={{ y: -5, boxShadow: "0px 10px 20px hsla(var(--primary) / 0.2)" }}
         >
             <div className="p-0 relative aspect-[2/3] w-full overflow-hidden">
-                {poster ? (
+                {posterUrl ? (
                     <Image
-                        src={poster.imageUrl}
+                        src={posterUrl}
                         alt={`Poster for ${movie.title}`}
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        data-ai-hint={poster.imageHint}
                     />
                 ) : (
                     <div className="bg-muted flex items-center justify-center h-full">
-                        <span className="text-muted-foreground">No Image</span>
+                        <span className="text-muted-foreground text-center text-sm p-2">{movie.title}</span>
                     </div>
                 )}
             </div>
             <div className="flex-grow p-4">
-                <h2 className="font-headline text-xl leading-tight">{movie.title}</h2>
+                <h2 className="font-headline text-xl leading-tight truncate" title={movie.title}>{movie.title}</h2>
                 <p className="text-sm text-muted-foreground mt-1">{movie.releaseYear}</p>
             </div>
             <div className="p-4 pt-0">
@@ -48,3 +51,18 @@ export default function MovieCard({ movie }: MovieCardProps) {
     </Link>
   );
 }
+
+export const MovieCardSkeleton = () => {
+    return (
+        <div className="flex flex-col h-full overflow-hidden rounded-lg border bg-card">
+            <Skeleton className="aspect-[2/3] w-full" />
+            <div className="flex-grow p-4 space-y-2">
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-4 w-1/4" />
+            </div>
+            <div className="p-4 pt-0">
+                <Skeleton className="h-6 w-1/2" />
+            </div>
+        </div>
+    );
+};

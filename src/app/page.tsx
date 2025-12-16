@@ -3,10 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Film, Star, Vote } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { placeholderImages } from "@/lib/data";
+
+const heroImage = {
+    id: "hero",
+    imageUrl: "https://images.unsplash.com/photo-1574267432553-4b4628081c31?q=80&w=2574&auto=format&fit=crop",
+    description: "A movie theater with red seats",
+    imageHint: "movie theater seats"
+}
 
 export default function Home() {
-  const heroImage = placeholderImages.find(p => p.id === "hero");
 
   return (
     <div className="space-y-16 md:space-y-24">

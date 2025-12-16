@@ -6,14 +6,18 @@ import Image from 'next/image';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Loader2, Check, LogIn, ThumbsUp } from "lucide-react";
+import { Loader2, LogIn, ThumbsUp } from "lucide-react";
 import { useUser } from "@/firebase";
-import type { Poll } from "@/lib/types";
-import { placeholderImages, getPoll as fetchPoll } from "@/lib/data";
+import type { Poll, Movie } from "@/lib/types";
+import { getPoll as fetchPoll } from "@/lib/data";
 import { submitVote } from "@/lib/actions";
 
+const getPosterURL = (path: string | null) => {
+    return path ? `https://image.tmdb.org/t/p/w500${path}` : null;
+}
+
 interface PollMovieCardProps {
-    movie: Poll['movieA'];
+    movie: Movie;
     onVote: () => void;
     disabled: boolean;
     hasVoted: boolean;
@@ -23,13 +27,13 @@ interface PollMovieCardProps {
 }
 
 const PollMovieCard = ({ movie, onVote, disabled, hasVoted, isWinner, percentage, votes }: PollMovieCardProps) => {
-    const poster = placeholderImages.find(p => p.id === movie.posterId);
+    const posterUrl = getPosterURL(movie.poster_path);
 
     return (
         <div className="relative flex flex-col items-center space-y-4">
             <Card className="w-full max-w-xs overflow-hidden transition-all duration-300">
                 <div className="aspect-[2/3] relative">
-                    {poster && <Image src={poster.imageUrl} alt={movie.title} fill className="object-cover" data-ai-hint="movie poster" />}
+                    {posterUrl ? <Image src={posterUrl} alt={movie.title} fill className="object-cover" /> : <div className="bg-muted flex items-center justify-center h-full"><span className="text-muted-foreground">{movie.title}</span></div>}
                     {hasVoted && isWinner && (
                         <div className="absolute inset-0 bg-primary/70 flex items-center justify-center">
                             <span className="text-2xl font-bold text-primary-foreground">Winner!</span>
@@ -57,38 +61,46 @@ const PollMovieCard = ({ movie, onVote, disabled, hasVoted, isWinner, percentage
 
 export default function PollClient() {
     const { user } = useUser();
-    const [poll, setPoll] = useState<Poll | null>(null);
-    const [userVote, setUserVote] = useState<string | null>(null);
+    const [pollData, setPollData] = useState<{ poll: Poll, userVote: string | null } | null>(null);
     const [loading, setLoading] = useState(true);
     const [isVoting, startVoteTransition] = useTransition();
 
     const getPoll = async () => {
         setLoading(true);
-        const { poll: newPoll, userVote: vote } = await fetchPoll();
-        setPoll(newPoll);
-        setUserVote(vote);
+        const data = await fetchPoll();
+        setPollData(data);
         setLoading(false);
     };
 
     useEffect(() => {
         getPoll();
     }, []);
+    
+    const poll = pollData?.poll;
+    const userVote = pollData?.userVote;
+    const setUserVote = (vote: string | null) => {
+        setPollData(prev => prev ? { ...prev, userVote: vote } : null);
+    }
 
-    const handleVote = (votedForMovieId: string) => {
+
+    const handleVote = (votedForMovieId: number) => {
         if (!poll) return;
         startVoteTransition(async () => {
-            await submitVote(poll.id, votedForMovieId);
+            await submitVote(poll.id, String(votedForMovieId));
             // In a real app, we would refetch the poll data to get updated counts.
             // For this mock, we'll simulate the update.
             setUserVote(votedForMovieId === poll.movieA.id ? 'movieA' : 'movieB');
-            setPoll(prev => {
-                if (!prev) return null;
-                const isVoteA = votedForMovieId === prev.movieA.id;
+            setPollData(prev => {
+                if (!prev || !prev.poll) return null;
+                const isVoteA = votedForMovieId === prev.poll.movieA.id;
                 return {
                     ...prev,
-                    votesA: prev.votesA + (isVoteA ? 1 : 0),
-                    votesB: prev.votesB + (!isVoteA ? 1 : 0),
-                    totalVotes: prev.totalVotes + 1,
+                    poll: {
+                        ...prev.poll,
+                        votesA: prev.poll.votesA + (isVoteA ? 1 : 0),
+                        votesB: prev.poll.votesB + (!isVoteA ? 1 : 0),
+                        totalVotes: prev.poll.totalVotes + 1,
+                    }
                 }
             })
         });

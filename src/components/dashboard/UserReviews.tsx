@@ -9,7 +9,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { Review } from "@/lib/types";
-import { mockMovies } from "@/lib/data";
 import StarRating from "../reviews/StarRating";
 import { format } from "date-fns";
 
@@ -20,7 +19,8 @@ interface UserReviewsProps {
 export default function UserReviews({ reviews }: UserReviewsProps) {
   // In a real app, this data would likely be joined in the query or fetched separately.
   const getMovieTitle = (movieId: string) => {
-    return mockMovies.find(m => m.id === movieId)?.title || "Unknown Movie";
+    // This will need to be replaced with a real data fetch or passed in props
+    return `Movie ID: ${movieId}`;
   }
 
   return (
