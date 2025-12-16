@@ -9,73 +9,73 @@
     {
       "id": "movie-1",
       "description": "Poster for the movie 'Stellar Odyssey'.",
-      "imageUrl": "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Stellar%0AOdyssey",
       "imageHint": "space movie"
     },
     {
       "id": "movie-2",
       "description": "Poster for the movie 'Echoes of the Past'.",
-      "imageUrl": "https://images.unsplash.com/photo-1585902422512-5859c24933a3?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Echoes%0Aof%20the%20Past",
       "imageHint": "drama movie"
     },
     {
       "id": "movie-3",
       "description": "Poster for the movie 'The Last Stand'.",
-      "imageUrl": "https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=The%20Last%0AStand",
       "imageHint": "action movie"
     },
     {
       "id": "movie-4",
       "description": "Poster for the movie 'Cybernetic Dreams'.",
-      "imageUrl": "https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Cybernetic%0ADreams",
       "imageHint": "sci-fi movie"
     },
     {
       "id": "movie-5",
       "description": "Poster for the movie 'Whispers in the Woods'.",
-      "imageUrl": "https://images.unsplash.com/photo-1594786523944-a73a72a8iqiv?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Whispers%0Ain%20the%20Woods",
       "imageHint": "mystery movie"
     },
     {
       "id": "movie-6",
       "description": "Poster for the movie 'City of Laughs'.",
-      "imageUrl": "https://images.unsplash.com/photo-1616503603332-34352f20f2bc?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=City%0Aof%20Laughs",
       "imageHint": "comedy movie"
     },
     {
       "id": "movie-7",
       "description": "Poster for the movie 'RRR'.",
-      "imageUrl": "https://images.unsplash.com/photo-1612036782180-6f0b6cd84627?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=RRR",
       "imageHint": "indian movie"
     },
     {
       "id": "movie-8",
       "description": "Poster for the movie 'Parasite'.",
-      "imageUrl": "https://images.unsplash.com/photo-1590179092 ratified?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Parasite",
       "imageHint": "korean movie"
     },
     {
       "id": "movie-9",
-      "description": "Poster for the movie 'Dune'.",
-      "imageUrl": "https://images.unsplash.com/photo-1598449033479-9c5931a38b8e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "description": "Poster for the movie 'Dune: Part Two'.",
+      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Dune%0APart%20Two",
       "imageHint": "adventure movie"
     },
     {
       "id": "movie-10",
       "description": "Poster for the movie '3 Idiots'.",
-      "imageUrl": "https://images.unsplash.com/photo-1533613220915-609f661a3fe1?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=3%20Idiots",
       "imageHint": "comedy movie"
     },
     {
       "id": "movie-11",
       "description": "Poster for the movie 'Spirited Away'.",
-      "imageUrl": "https://images.unsplash.com/photo-1585932221469-817e9a8b8b09?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Spirited%0AAway",
       "imageHint": "animation movie"
     },
     {
       "id": "movie-12",
       "description": "Poster for the movie 'The Dark Knight'.",
-      "imageUrl": "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=The%20Dark%0AKnight",
       "imageHint": "superhero movie"
     },
     {
