@@ -1,11 +1,21 @@
 "use client";
 
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { z } from "zod";
+import { LoginSchema } from "@/schemas";
+import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { initializeFirebase } from "@/firebase";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 
 const getAuthErrorMessage = (errorCode: string): string => {
     switch (errorCode) {
+        case "auth/invalid-email":
+            return "The email address is not valid.";
+        case "auth/user-disabled":
+            return "This user account has been disabled.";
+        case "auth/user-not-found":
+        case "auth/wrong-password":
+        case "auth/invalid-credential":
+            return "Invalid email or password.";
         case 'auth/popup-closed-by-user':
             return 'Sign-in process was cancelled.';
         case 'auth/account-exists-with-different-credential':
@@ -14,6 +24,29 @@ const getAuthErrorMessage = (errorCode: string): string => {
             return "An unexpected error occurred. Please try again.";
     }
 };
+
+export async function signInWithEmail(values: z.infer<typeof LoginSchema>) {
+    const { auth } = initializeFirebase();
+    const validatedFields = LoginSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+        return { error: "Invalid fields!" };
+    }
+
+    const { email, password } = validatedFields.data;
+
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+        return { success: "Logged in successfully!" };
+    } catch (error: any) {
+        const knownError = getAuthErrorMessage(error.code);
+        if (knownError !== "An unexpected error occurred. Please try again.") {
+            return { error: knownError };
+        }
+        return { error: error.message || "An unexpected error occurred. Please try again." };
+    }
+}
+
 
 export async function signInWithGoogle() {
   const { auth, firestore } = initializeFirebase();

@@ -12,8 +12,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { LoginSchema, SignupSchema } from '@/schemas';
-import { login, signup } from '@/lib/actions';
-import { signInWithGoogle } from '@/lib/auth-actions';
+import { signup } from '@/lib/actions';
+import { signInWithGoogle, signInWithEmail } from '@/lib/auth-actions';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import { Separator } from '../ui/separator';
@@ -42,8 +42,9 @@ export function AuthForm({ type }: AuthFormProps) {
 
   const onSubmit = (values: z.infer<typeof schema>) => {
     startTransition(async () => {
-      const action = isLogin ? login : signup;
-      const result = await action(values as any); 
+      const result = isLogin 
+        ? await signInWithEmail(values as z.infer<typeof LoginSchema>)
+        : await signup(values as z.infer<typeof SignupSchema>);
 
       if (result.error) {
         toast({

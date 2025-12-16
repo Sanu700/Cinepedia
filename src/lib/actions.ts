@@ -1,8 +1,8 @@
 "use server";
 
 import { z } from "zod";
-import { LoginSchema, SignupSchema, ReviewSchema } from "@/schemas";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
+import { SignupSchema, ReviewSchema } from "@/schemas";
+import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { initializeFirebase } from "@/firebase/server";
 import { collection, doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
 
@@ -26,24 +26,6 @@ const getAuthErrorMessage = (errorCode: string): string => {
             return "An unexpected error occurred. Please try again.";
     }
 };
-
-export async function login(values: z.infer<typeof LoginSchema>) {
-  const validatedFields = LoginSchema.safeParse(values);
-
-  if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
-  }
-  
-  const { email, password } = validatedFields.data;
-  const { auth } = initializeFirebase();
-
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    return { success: "Logged in successfully!" };
-  } catch (error: any) {
-    return { error: getAuthErrorMessage(error.code) };
-  }
-}
 
 export async function signup(values: z.infer<typeof SignupSchema>) {
   const validatedFields = SignupSchema.safeParse(values);
