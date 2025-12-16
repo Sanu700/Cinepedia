@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A movie suggestion AI agent that recommends movies based on user's mood and preferences.
@@ -153,23 +154,25 @@ const movieSuggesterFlow = ai.defineFlow(
 
     const topMovies = movies.slice(0, 5); // Limit to 5 suggestions for now
 
-    // Step 3: For each movie, generate a personalized reason
+    // Step 3: For each movie, generate a personalized reason and fetch providers
     const suggestionsWithReasons = await Promise.all(
         topMovies.map(async (movie) => {
-            const { output: reasonOutput } = await reasonGeneratorPrompt({
-                movieTitle: movie.title,
-                movieSynopsis: movie.overview,
-                mood: input.mood,
-                preferences: input.preferences || [],
-            });
+            const [reasonResult, providers] = await Promise.all([
+                reasonGeneratorPrompt({
+                    movieTitle: movie.title,
+                    movieSynopsis: movie.overview,
+                    mood: input.mood,
+                    preferences: input.preferences || [],
+                }),
+                getWatchProviders(movie.id)
+            ]);
 
-            // Fetch watch providers in parallel
-            const providers = await getWatchProviders(movie.id);
+            const reason = reasonResult.output?.reason || 'A great choice for your current mood!';
 
             return {
                 tmdbId: movie.id,
                 title: movie.title,
-                reason: reasonOutput?.reason || 'A great choice for your current mood!',
+                reason: reason,
                 movie: { ...movie, watchProviders: providers }, // Attach full movie object with providers
             };
         })
