@@ -1,12 +1,13 @@
+
 import type { Movie, Review, User, UserActivity, TMDBSearchResult } from '@/lib/types';
 
 // --- TMDB API ---
-const TMDB_API_KEY = process.env.TMDB_API_KEY;
+const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 const TMDB_API_URL = 'https://api.themoviedb.org/3';
 
 const fetchFromTMDB = async (path: string, params: Record<string, string> = {}) => {
     if (!TMDB_API_KEY) {
-        throw new Error('TMDB_API_KEY is not configured in .env file');
+        throw new Error('NEXT_PUBLIC_TMDB_API_KEY is not configured in .env file');
     }
     const url = new URL(`${TMDB_API_URL}${path}`);
     url.searchParams.append('api_key', TMDB_API_KEY);
