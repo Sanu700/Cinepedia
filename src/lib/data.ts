@@ -1,5 +1,5 @@
 
-import type { Movie, Review, User, UserActivity, TMDBSearchResult, Streak } from '@/lib/types';
+import type { Movie, Review, User, UserActivity, TMDBSearchResult, Streak, WatchProviderResult } from '@/lib/types';
 
 // --- TMDB API ---
 const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
@@ -59,7 +59,7 @@ export async function getMovies(params: Record<string, string> = {}): Promise<Mo
 }
 
 export async function getMovieById(id: string): Promise<Movie | undefined> {
-  const movie: Movie = await fetchFromTMDB(`/movie/${id}`, { append_to_response: 'credits,runtime' });
+  const movie: Movie = await fetchFromTMDB(`/movie/${id}`, { append_to_response: 'credits' });
   if (!movie) return undefined;
   
   // In a real app, we would fetch reviews from Firestore. Here we use mock data.
@@ -70,10 +70,13 @@ export async function getMovieById(id: string): Promise<Movie | undefined> {
     releaseYear: movie.release_date ? parseInt(movie.release_date.split('-')[0]) : 0,
     avgRating: movie.vote_average,
     reviews: movieReviews,
+    // The TMDB API response for a single movie might have a `runtime` property.
+    // If not, we fall back to a default value or leave it undefined.
+    runtime: (movie as any).runtime || undefined,
   };
 }
 
-export async function getWatchProviders(movieId: number) {
+export async function getWatchProviders(movieId: number): Promise<WatchProviderResult | undefined> {
     const data = await fetchFromTMDB(`/movie/${movieId}/watch/providers`);
     return data?.results?.US; // Focusing on US providers for simplicity
 }
@@ -96,6 +99,7 @@ export const mockReviews: Review[] = [
     text: "A masterpiece of science fiction. The visuals were breathtaking and the story was deeply moving. A must-see for any fan of the genre.",
     createdAt: "2024-05-20T14:48:00.000Z",
     user: mockUsers.find(u => u.id === 'user-2')!,
+    likes: 12,
   },
   {
     id: 'review-2',
@@ -106,6 +110,7 @@ export const mockReviews: Review[] = [
     createdAt: "2024-05-21T18:00:00.000Z",
     hasSpoiler: true,
     user: mockUsers.find(u => u.id === 'user-1')!,
+    likes: 3,
   },
 ];
 

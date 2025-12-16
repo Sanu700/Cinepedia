@@ -17,7 +17,7 @@ export function WandSparklesIcon(props: SVGProps<SVGSVGElement>) {
       <path d="m5 3 2.5 2.5" />
       <path d="m13.5 4.5 2.5 2.5" />
       <path d="M19 13h2" />
-      <path d="M13.5 19.5 11 17" />
+      <path d="m13.5 19.5 11 17" />
       <path d="m5 21 2.5-2.5" />
       <path d="M4.5 13.5 7 11" />
       <path d="M11 21v-3.5L18.5 10 21 7.5 16.5 3 14 5.5l-7.5 7.5V21h3.5Z" />

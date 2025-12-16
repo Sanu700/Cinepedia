@@ -77,6 +77,7 @@ export interface UserActivity {
   date: string; // ISO string
   title: string;
   description: string;
+
   link: string;
 }
 
