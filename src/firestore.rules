@@ -133,20 +133,25 @@ service cloud.firestore {
     }
 
     /**
-     * @description Defines rules for movie reviews. Reviews are public to read,
-     *              but creating, updating, or deleting them requires ownership and
-     *              a verified email status.
+     * @description Defines rules for movie reviews. Reviews are public to read.
+     *              Creating, updating, or deleting requires ownership and verification.
+     *              Liking a review only requires a verified account.
      * @path /reviews/{reviewId}
      * @allow (create) An email-verified user with an account >24h old submits a review.
-     * @allow (update) The original author of a review edits their own review text.
+     * @allow (update) The original author edits their own review, or any verified user likes a review.
      * @deny (create) A user without a verified email attempts to submit a review.
-     * @deny (update) A user tries to edit someone else's review.
-     * @principle Enforces document ownership and community trust for writes.
+     * @deny (update) A user tries to edit fields other than 'likes' on someone else's review.
+     * @principle Enforces document ownership for content and community trust for interactions.
      */
     match /reviews/{reviewId} {
       allow get, list: if true;
       allow create: if isValidNewReview();
+      // Allow the owner to update their own review content.
       allow update: if isExistingOwner(resource.data.userId) && isVerifiedUser() && request.resource.data.userId == resource.data.userId;
+      // Allow any verified user to update *only* the 'likes' field.
+      allow update: if isVerifiedUser()
+                      && request.resource.data.keys().hasOnly(['likes'])
+                      && request.resource.data.likes == resource.data.likes + 1;
       allow delete: if isExistingOwner(resource.data.userId);
     }
 
@@ -190,7 +195,8 @@ service cloud.firestore {
      * @deny (list) No user can list all streaks.
      */
     match /streaks/{userId} {
-        allow get, write: if isOwner(userId);
+        allow get: if isOwner(userId);
+        allow write: if isOwner(userId);
         allow list: if false;
     }
   }

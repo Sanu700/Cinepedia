@@ -1,4 +1,5 @@
 
+
 export interface User {
   id: string;
   email: string;
@@ -52,6 +53,7 @@ export interface Review {
   createdAt: string; // ISO string
   hasSpoiler?: boolean;
   user: User;
+  likes: number;
 }
 
 export interface Poll {

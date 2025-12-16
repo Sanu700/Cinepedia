@@ -1,11 +1,12 @@
 
+
 "use server";
 
 import { z } from "zod";
 import { SignupSchema, ReviewSchema } from "@/schemas";
 import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { initializeFirebase } from "@/firebase/server";
-import { collection, doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
+import { collection, doc, setDoc, serverTimestamp, getDoc, runTransaction, increment } from "firebase/firestore";
 
 const getAuthErrorMessage = (errorCode: string): string => {
     switch (errorCode) {
@@ -158,5 +159,33 @@ export async function submitVote(pollId: string, movieId: string) {
         return { success: "Vote cast!" };
     } catch (e: any) {
          return { error: "Failed to cast vote. You may have already voted in this poll." };
+    }
+}
+
+export async function likeReview(reviewId: string) {
+    const { auth, firestore } = initializeFirebase();
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+        return { error: "You must be logged in to like a review." };
+    }
+    if (!currentUser.emailVerified) {
+        return { error: "Please verify your email to like reviews." };
+    }
+
+    const reviewRef = doc(firestore, "reviews", reviewId);
+
+    try {
+        await runTransaction(firestore, async (transaction) => {
+            const reviewDoc = await transaction.get(reviewRef);
+            if (!reviewDoc.exists()) {
+                throw "Review does not exist!";
+            }
+            // Atomically increment the likes field.
+            transaction.update(reviewRef, { likes: increment(1) });
+        });
+        return { success: true };
+    } catch (error) {
+        console.error("Like review transaction failed: ", error);
+        return { error: "Could not update likes. Please try again." };
     }
 }

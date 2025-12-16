@@ -1,4 +1,5 @@
 
+
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import StarRating from '@/components/reviews/StarRating';
@@ -12,6 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import ReviewActions from './ReviewActions';
 
 interface ReviewListProps {
   reviews: Review[];
@@ -102,6 +104,7 @@ export default function ReviewList({ reviews }: ReviewListProps) {
             ) : (
               <p className="text-foreground/90">{review.text}</p>
             )}
+             <ReviewActions reviewId={review.id} initialLikes={review.likes} />
           </CardContent>
         </Card>
       ))}
