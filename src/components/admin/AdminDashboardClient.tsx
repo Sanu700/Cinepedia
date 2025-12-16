@@ -1,9 +1,10 @@
 
 'use client';
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAdminStatus } from "@/hooks/useAdminStatus";
-import { useDoc } from "@/firebase";
+import { useDoc, useMemoFirebase } from "@/firebase";
 import { doc, getFirestore } from "firebase/firestore";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,16 +28,23 @@ export default function AdminDashboardClient() {
     const { isAdmin, isLoading: isAdminLoading } = useAdminStatus();
     const firestore = getFirestore();
 
-    const analyticsRef = doc(firestore, 'analytics', 'stats');
+    const analyticsRef = useMemoFirebase(() => {
+        if (!firestore) return null;
+        return doc(firestore, 'analytics', 'stats');
+    }, [firestore]);
+    
     const { data: analyticsData, isLoading: isAnalyticsLoading } = useDoc<SiteAnalytics>(analyticsRef);
 
-    if (isAdminLoading || isAnalyticsLoading) {
-        return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
-    }
+    useEffect(() => {
+        // Run this effect after rendering and when loading is complete.
+        if (!isAdminLoading && !isAdmin) {
+            router.push('/dashboard');
+        }
+    }, [isAdmin, isAdminLoading, router]);
 
-    if (!isAdmin) {
-        router.push('/dashboard');
-        return null;
+    if (isAdminLoading || isAnalyticsLoading || !isAdmin) {
+        // Show loader while checking auth or if redirecting
+        return <div className="flex h-64 items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>;
     }
     
     // Prepare data for the chart
