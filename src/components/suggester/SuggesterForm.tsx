@@ -74,7 +74,6 @@ export default function SuggesterForm() {
 
   const surpriseMe = () => {
     if (results && results.length > 0) {
-      // This will only run on the client after a click, so Math.random is safe here.
       const randomIndex = Math.floor(Math.random() * results.length);
       const surpriseMovie = results[randomIndex];
       setResults([surpriseMovie]);
