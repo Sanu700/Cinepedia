@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getMovieById, placeholderImages } from '@/lib/data';
@@ -68,6 +69,11 @@ export default async function MoviePage({ params }: MoviePageProps) {
       <section>
         <h2 className="text-3xl font-headline font-bold mb-6">Community Reviews</h2>
         <ReviewList reviews={movie.reviews} />
+      </section>
+
+      <Separator />
+
+      <section id="write-review">
         <ReviewForm movieId={movie.id} movieSynopsis={movie.synopsis} />
       </section>
     </div>
