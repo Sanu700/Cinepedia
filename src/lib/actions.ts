@@ -6,7 +6,7 @@ import { z } from "zod";
 import { SignupSchema, ReviewSchema } from "@/schemas";
 import { createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import { initializeFirebase } from "@/firebase/server";
-import { collection, doc, setDoc, serverTimestamp, getDoc, runTransaction, increment } from "firebase/firestore";
+import { collection, doc, setDoc, serverTimestamp, getDoc, runTransaction, increment, updateDoc, deleteDoc } from "firebase/firestore";
 
 const getAuthErrorMessage = (errorCode: string): string => {
     switch (errorCode) {
@@ -122,7 +122,7 @@ export async function submitReview(values: z.infer<typeof ReviewSchema>) {
             rating,
             reviewText: text,
             hasSpoiler: hasSpoiler || false,
-            timestamp: serverTimestamp(),
+            createdAt: serverTimestamp(),
             likes: 0,
         });
         return { success: "Review submitted successfully!" };
@@ -130,6 +130,55 @@ export async function submitReview(values: z.infer<typeof ReviewSchema>) {
     } catch(e: any) {
         console.error("Review submission error:", e);
         return { error: "Could not submit review. Please try again." };
+    }
+}
+
+export async function updateReview(reviewId: string, values: z.infer<typeof ReviewSchema>) {
+    const { auth, firestore } = initializeFirebase();
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+        return { error: "You must be logged in to update a review." };
+    }
+
+    const validatedFields = ReviewSchema.safeParse(values);
+    if (!validatedFields.success) {
+        return { error: "Invalid review data!" };
+    }
+
+    const { rating, text, hasSpoiler } = validatedFields.data;
+    const reviewRef = doc(firestore, "reviews", reviewId);
+
+    try {
+        // Security rules will enforce ownership, so we proceed with the update.
+        await updateDoc(reviewRef, {
+            rating,
+            reviewText: text,
+            hasSpoiler: hasSpoiler || false,
+        });
+        return { success: "Review updated successfully!" };
+    } catch (e: any) {
+        console.error("Update review error:", e);
+        return { error: "Could not update review. Please check permissions or try again." };
+    }
+}
+
+
+export async function deleteReview(reviewId: string) {
+    const { auth, firestore } = initializeFirebase();
+    const currentUser = auth.currentUser;
+     if (!currentUser) {
+        return { error: "You must be logged in to delete a review." };
+    }
+
+    const reviewRef = doc(firestore, "reviews", reviewId);
+
+    try {
+        // Security rules will enforce that only the owner can delete.
+        await deleteDoc(reviewRef);
+        return { success: "Review deleted successfully." };
+    } catch (e: any) {
+        console.error("Delete review error:", e);
+        return { error: "Could not delete review. Please check permissions or try again." };
     }
 }
 

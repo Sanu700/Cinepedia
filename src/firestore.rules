@@ -146,12 +146,11 @@ service cloud.firestore {
     match /reviews/{reviewId} {
       allow get, list: if true;
       allow create: if isValidNewReview();
-      // Allow the owner to update their own review content.
-      allow update: if isExistingOwner(resource.data.userId) && isVerifiedUser() && request.resource.data.userId == resource.data.userId;
-      // Allow any verified user to update *only* the 'likes' field.
-      allow update: if isVerifiedUser()
-                      && request.resource.data.keys().hasOnly(['likes'])
-                      && request.resource.data.likes == resource.data.likes + 1;
+      allow update: if 
+          // Rule 1: The owner can update their own review text, rating, and spoiler tag.
+          (isExistingOwner(resource.data.userId) && isVerifiedUser() && request.resource.data.userId == resource.data.userId && request.resource.data.keys().hasAll(['rating', 'reviewText', 'hasSpoiler'])) ||
+          // Rule 2: Any verified user can update *only* the 'likes' field to increment it by 1.
+          (isVerifiedUser() && request.resource.data.keys().hasOnly(['likes']) && request.resource.data.likes == resource.data.likes + 1);
       allow delete: if isExistingOwner(resource.data.userId);
     }
 
