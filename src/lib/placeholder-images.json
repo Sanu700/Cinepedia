@@ -8,92 +8,92 @@
     },
     {
       "id": "movie-1",
-      "description": "Poster for the movie 'Stellar Odyssey'.",
-      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Stellar%0AOdyssey",
+      "description": "A man in a spacesuit looking out at a nebula.",
+      "imageUrl": "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1742&q=80",
       "imageHint": "space movie"
     },
     {
       "id": "movie-2",
-      "description": "Poster for the movie 'Echoes of the Past'.",
-      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Echoes%0Aof%20the%20Past",
-      "imageHint": "drama movie"
+      "description": "A shadowy figure in a long coat standing in a foggy alley.",
+      "imageUrl": "https://images.unsplash.com/photo-1518080661334-94a333225555?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+      "imageHint": "mystery thriller"
     },
     {
       "id": "movie-3",
-      "description": "Poster for the movie 'The Last Stand'.",
-      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=The%20Last%0AStand",
+      "description": "An explosion in a desert landscape with a vehicle flipping over.",
+      "imageUrl": "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1748&q=80",
       "imageHint": "action movie"
     },
     {
       "id": "movie-4",
-      "description": "Poster for the movie 'Cybernetic Dreams'.",
-      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Cybernetic%0ADreams",
-      "imageHint": "sci-fi movie"
+      "description": "A futuristic cityscape at night with neon signs.",
+      "imageUrl": "https://images.unsplash.com/photo-1519638399535-1b0386196261?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+      "imageHint": "cyberpunk city"
     },
     {
       "id": "movie-5",
-      "description": "Poster for the movie 'Whispers in the Woods'.",
-      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Whispers%0Ain%20the%20Woods",
-      "imageHint": "mystery movie"
+      "description": "A spooky, dark forest with light filtering through the trees.",
+      "imageUrl": "https://images.unsplash.com/photo-1447014421976-7f4415b8e1df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1742&q=80",
+      "imageHint": "horror woods"
     },
     {
       "id": "movie-6",
-      "description": "Poster for the movie 'City of Laughs'.",
-      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=City%0Aof%20Laughs",
-      "imageHint": "comedy movie"
+      "description": "A microphone on a stage in an empty comedy club.",
+      "imageUrl": "https://images.unsplash.com/photo-1571172863429-35b44866a404?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+      "imageHint": "comedy club"
     },
     {
       "id": "movie-7",
-      "description": "Poster for the movie 'RRR'.",
-      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=RRR",
-      "imageHint": "indian movie"
+      "description": "Two men in historical Indian attire, one on a horse and one on a motorcycle, in an action pose.",
+      "imageUrl": "https://images.unsplash.com/photo-1609342122563-a43ac8917a3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1748&q=80",
+      "imageHint": "indian historical"
     },
     {
       "id": "movie-8",
-      "description": "Poster for the movie 'Parasite'.",
-      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Parasite",
-      "imageHint": "korean movie"
+      "description": "A modern, minimalist house with a dark and ominous feel.",
+      "imageUrl": "https://images.unsplash.com/photo-1600585154340-be6164a83639?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+      "imageHint": "modern house"
     },
     {
       "id": "movie-9",
-      "description": "Poster for the movie 'Dune: Part Two'.",
-      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Dune%0APart%20Two",
-      "imageHint": "adventure movie"
+      "description": "A vast desert landscape with giant sandworms and futuristic soldiers.",
+      "imageUrl": "https://images.unsplash.com/photo-1588247866352-2b4fe8282c8a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+      "imageHint": "desert planet"
     },
     {
       "id": "movie-10",
-      "description": "Poster for the movie '3 Idiots'.",
-      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=3%20Idiots",
-      "imageHint": "comedy movie"
+      "description": "Three friends laughing together at a university campus.",
+      "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80",
+      "imageHint": "college friends"
     },
     {
       "id": "movie-11",
-      "description": "Poster for the movie 'Spirited Away'.",
-      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Spirited%0AAway",
-      "imageHint": "animation movie"
+      "description": "A colorful, magical world with fantastical creatures and a young girl.",
+      "imageUrl": "https://images.unsplash.com/photo-1604537492247-f8319e67123d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1738&q=80",
+      "imageHint": "fantasy animation"
     },
     {
       "id": "movie-12",
-      "description": "Poster for the movie 'The Dark Knight'.",
-      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=The%20Dark%0AKnight",
-      "imageHint": "superhero movie"
+      "description": "A dark, gritty cityscape with a caped vigilante overlooking it.",
+      "imageUrl": "https://images.unsplash.com/photo-1531259683007-01607b626355?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1587&q=80",
+      "imageHint": "dark city"
     },
     {
       "id": "avatar-1",
-      "description": "User avatar 1.",
-      "imageUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjU4NjUxMjF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "description": "Portrait of a man with a beard.",
+      "imageUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=128&h=128&q=80",
       "imageHint": "person portrait"
     },
     {
       "id": "avatar-2",
-      "description": "User avatar 2.",
-      "imageUrl": "https://images.unsplash.com/photo-1614283233556-f35b0c801ef1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2NTc3NTIwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "description": "Portrait of a woman with curly hair.",
+      "imageUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=128&h=128&q=80",
       "imageHint": "woman portrait"
     },
     {
       "id": "avatar-3",
-      "description": "User avatar 3.",
-      "imageUrl": "https://images.unsplash.com/photo-1636377985931-898218afd306?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjU4MzUyOTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "description": "Portrait of a man in glasses.",
+      "imageUrl": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=128&h=128&q=80",
       "imageHint": "man portrait"
     }
   ]

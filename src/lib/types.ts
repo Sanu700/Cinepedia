@@ -13,7 +13,7 @@ export interface Movie {
   posterId: string;
   reviews: Review[];
   avgRating: number;
-  country: 'USA' | 'India' | 'UK' | 'South Korea';
+  country: 'USA' | 'India' | 'UK' | 'South Korea' | 'Japan';
   director: string;
   genres: string[];
 }

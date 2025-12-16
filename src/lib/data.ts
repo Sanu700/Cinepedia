@@ -193,7 +193,7 @@ export const mockMovies: Movie[] = [
     synopsis: 'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, and where humans are changed into beasts.',
     releaseYear: 2001,
     posterId: 'movie-11',
-    country: 'USA', // Studio Ghibli is Japanese, but often distributed/categorized under USA for streaming
+    country: 'Japan',
     director: 'Hayao Miyazaki',
     genres: ['Animation', 'Fantasy', 'Family'],
     reviews: mockReviews.filter(r => r.movieId === 'movie-11'),
