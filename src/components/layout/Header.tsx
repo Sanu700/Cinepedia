@@ -118,7 +118,7 @@ export default function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="space-x-2">
+            <div className="flex items-center gap-2">
               <Button variant="ghost" asChild>
                 <Link href="/login">Log In</Link>
               </Button>
