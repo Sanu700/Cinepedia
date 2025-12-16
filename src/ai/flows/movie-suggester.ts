@@ -58,10 +58,19 @@ const MovieSuggestionSchema = z.object({
   reason: z.string().describe('A short, compelling reason (1-2 sentences) why this movie fits the user\'s mood and preferences.'),
 });
 
+// This is a single suggestion item, enhanced with the full movie object
+export type SingleMovieSuggestion = z.infer<typeof MovieSuggestionSchema> & { movie: Movie };
+
+// The final output of the flow is an object containing an array of these suggestions
 const MovieSuggesterOutputSchema = z.object({
-  suggestions: z.array(MovieSuggestionSchema),
+  suggestions: z.array(MovieSuggestionSchema.extend({
+      // We don't need to define the movie object in the zod schema for the AI,
+      // as it's attached in our code, but it's part of the final return type.
+  })),
 });
-export type MovieSuggesterOutput = MovieSuggestionSchema & { movie: Movie };
+export type MovieSuggesterOutput = {
+  suggestions: SingleMovieSuggestion[];
+};
 
 
 // Main exported function to be called from the client
@@ -137,7 +146,7 @@ const movieSuggesterFlow = ai.defineFlow(
     inputSchema: MovieSuggesterInputSchema,
     outputSchema: MovieSuggesterOutputSchema,
   },
-  async (input) => {
+  async (input): Promise<MovieSuggesterOutput> => {
     // Step 1: Generate TMDB filters from mood
     const { output: filters } = await filterGeneratorPrompt(input);
     if (!filters) {
