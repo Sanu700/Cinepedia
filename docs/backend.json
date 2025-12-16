@@ -1,0 +1,300 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user in the Cinepedia application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address.",
+          "format": "email"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User's display name."
+        },
+        "creationTimestamp": {
+          "type": "string",
+          "description": "Timestamp of when the user account was created.",
+          "format": "date-time"
+        },
+        "isEmailVerified": {
+          "type": "boolean",
+          "description": "Indicates whether the user has verified their email address."
+        },
+        "trustScore": {
+          "type": "number",
+          "description": "A score representing the user's trustworthiness based on account age and review history."
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "displayName",
+        "creationTimestamp",
+        "isEmailVerified"
+      ]
+    },
+    "Movie": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Movie",
+      "type": "object",
+      "description": "Represents a movie in the Cinepedia application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Movie entity."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the movie."
+        },
+        "synopsis": {
+          "type": "string",
+          "description": "Synopsis or summary of the movie's plot."
+        },
+        "genre": {
+          "type": "string",
+          "description": "Genre of the movie."
+        },
+        "releaseDate": {
+          "type": "string",
+          "description": "Release date of the movie.",
+          "format": "date-time"
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the movie's poster image.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "synopsis",
+        "genre",
+        "releaseDate",
+        "imageUrl"
+      ]
+    },
+    "Review": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Review",
+      "type": "object",
+      "description": "Represents a user's review of a movie.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Review entity."
+        },
+        "movieId": {
+          "type": "string",
+          "description": "Reference to Movie. (Relationship: Movie 1:N Review)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Review)"
+        },
+        "rating": {
+          "type": "number",
+          "description": "Rating given by the user (1-5)."
+        },
+        "reviewText": {
+          "type": "string",
+          "description": "Text content of the review."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the review was submitted.",
+          "format": "date-time"
+        },
+        "likes": {
+          "type": "number",
+          "description": "The number of likes the review has received."
+        }
+      },
+      "required": [
+        "id",
+        "movieId",
+        "userId",
+        "rating",
+        "reviewText",
+        "timestamp"
+      ]
+    },
+    "Poll": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Poll",
+      "type": "object",
+      "description": "Represents a movie poll where users can vote between two movies.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Poll entity."
+        },
+        "movie1Id": {
+          "type": "string",
+          "description": "Reference to Movie. First movie in the poll."
+        },
+        "movie2Id": {
+          "type": "string",
+          "description": "Reference to Movie. Second movie in the poll."
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Timestamp of when the poll started.",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "description": "Timestamp of when the poll ends.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "movie1Id",
+        "movie2Id",
+        "startTime",
+        "endTime"
+      ]
+    },
+    "Vote": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Vote",
+      "type": "object",
+      "description": "Represents a user's vote in a movie poll.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Vote entity."
+        },
+        "pollId": {
+          "type": "string",
+          "description": "Reference to Poll. (Relationship: Poll 1:N Vote)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Vote)"
+        },
+        "movieId": {
+          "type": "string",
+          "description": "Reference to Movie. The movie the user voted for."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of when the vote was cast.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "pollId",
+        "userId",
+        "movieId",
+        "timestamp"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles. Includes standard user data like email, display name, creation timestamp, and email verification status.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/movies/{movieId}",
+        "definition": {
+          "entityName": "Movie",
+          "schema": {
+            "$ref": "#/backend/entities/Movie"
+          },
+          "description": "Stores movie information, including title, synopsis, genre, release date, and image URL.",
+          "params": [
+            {
+              "name": "movieId",
+              "description": "The unique identifier for the movie."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/reviews/{reviewId}",
+        "definition": {
+          "entityName": "Review",
+          "schema": {
+            "$ref": "#/backend/entities/Review"
+          },
+          "description": "Stores movie reviews. Includes denormalized 'userId' for authorization independence, 'movieId' to identify what movie the review is for, and a 'likes' field. The review also contains the user's rating, review text, and timestamp.",
+          "params": [
+            {
+              "name": "reviewId",
+              "description": "The unique identifier for the review."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/polls/{pollId}",
+        "definition": {
+          "entityName": "Poll",
+          "schema": {
+            "$ref": "#/backend/entities/Poll"
+          },
+          "description": "Stores movie poll information, including the two movies being compared and the start and end times of the poll.",
+          "params": [
+            {
+              "name": "pollId",
+              "description": "The unique identifier for the poll."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/polls/{pollId}/votes/{voteId}",
+        "definition": {
+          "entityName": "Vote",
+          "schema": {
+            "$ref": "#/backend/entities/Vote"
+          },
+          "description": "Stores votes for a movie poll. Each vote includes the user's ID, the movie they voted for, and the timestamp of the vote. ",
+          "params": [
+            {
+              "name": "pollId",
+              "description": "The unique identifier for the poll."
+            },
+            {
+              "name": "voteId",
+              "description": "The unique identifier for the vote."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to prioritize authorization independence, clarity, and scalability. It leverages denormalization to avoid hierarchical authorization dependencies, ensuring atomic operations and simplified security rules. Segregation of data into collections with homogeneous security postures simplifies rules and ensures QAPs. Path-based ownership is used where appropriate to avoid complex authorization logic, and membership maps are employed for collaborative data access. Radically consistent naming conventions improve debuggability.\n\nSpecifically, authorization independence is achieved by denormalizing user information (isEmailVerified, trustScore) into the reviews collection. This allows us to write security rules for reviews without needing to perform `get()` operations to the users collection. This is crucial for maintaining atomic operations (transactions and batches) when creating or updating reviews.\n\nThe design supports QAPs as follows:\n\n*   Secure List Operations: By segregating data based on ownership (e.g., `/users/{userId}/reviews`) and using dedicated collections for global roles (`/roles_admin/{uid}` - although not explicitly used here, it's a general principle), the structure ensures that list operations can be secured without filtering data based on content.\n*   Membership Model: The `members` field in collaborative documents is denormalized, which avoids `get()` calls to parent documents to verify membership, allowing secure reads and writes without complex filtering."
+  }
+}
