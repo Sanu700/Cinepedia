@@ -8,7 +8,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2, Film, Tv, Star, Clock } from 'lucide-react';
-import { suggestMovies, type MovieSuggesterInput, type SingleMovieSuggestion } from '@/ai/flows/movie-suggester';
+import { suggestMovies, MovieSuggesterInput } from '@/ai/flows/movie-suggester';
+import type { MovieSuggesterOutput } from '@/ai/flows/movie-suggester';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Separator } from '../ui/separator';
@@ -38,7 +39,7 @@ export default function SuggesterForm() {
   const [step, setStep] = useState<Step>('mood');
   const [selectedMood, setSelectedMood] = useState<MovieSuggesterInput['mood'] | null>(null);
   const [selectedPreferences, setSelectedPreferences] = useState<MovieSuggesterInput['preferences']>([]);
-  const [results, setResults] = useState<SingleMovieSuggestion[] | null>(null);
+  const [results, setResults] = useState<MovieSuggesterOutput['suggestions'] | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
