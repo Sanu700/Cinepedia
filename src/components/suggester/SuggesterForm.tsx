@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useTransition } from 'react';
@@ -59,11 +58,20 @@ export default function SuggesterForm() {
     if (!selectedMood) return;
     setStep('loading');
     startTransition(async () => {
-      try {
         const response = await suggestMovies({
           mood: selectedMood,
           preferences: selectedPreferences,
         });
+
+        if (response.error) {
+            toast({
+              title: "AI Service Error",
+              description: response.error,
+              variant: "destructive",
+            });
+            reset();
+            return;
+        }
 
         if (response && response.suggestions && response.suggestions.length > 0) {
           setResults(response.suggestions);
@@ -76,15 +84,6 @@ export default function SuggesterForm() {
           });
           reset();
         }
-      } catch (error) {
-        console.error("Movie suggestion error:", error);
-        toast({
-          title: "AI Service Error",
-          description: "The movie suggestion service is currently unavailable. Please try again in a moment.",
-          variant: "destructive",
-        });
-        reset();
-      }
     });
   };
   
@@ -96,7 +95,7 @@ export default function SuggesterForm() {
   }
 
   const surpriseMe = () => {
-    if (results && results.length > 0) {
+    if (results && results.length > 1) {
       const randomIndex = Math.floor(Math.random() * results.length);
       const surpriseMovie = results[randomIndex];
       setResults([surpriseMovie]);
@@ -252,7 +251,7 @@ export default function SuggesterForm() {
                 Show More Like This
               </Button>
               <Button type="button" variant="secondary" onClick={reset}>Change Mood</Button>
-              <Button type="button" variant="outline" onClick={surpriseMe}>Surprise Me</Button>
+              {results.length > 1 && <Button type="button" variant="outline" onClick={surpriseMe}>Surprise Me</Button>}
             </div>
           </motion.div>
         )}

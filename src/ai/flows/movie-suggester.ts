@@ -47,9 +47,11 @@ const MovieSuggestionSchema = z.object({
 
 const MovieSuggesterOutputSchema = z.object({
   suggestions: z.array(MovieSuggestionSchema),
+  error: z.string().optional(),
 });
 export type MovieSuggesterOutput = {
   suggestions: (z.infer<typeof MovieSuggestionSchema> & { movie: Movie })[];
+  error?: string;
 };
 
 // Main exported function to be called from the client
@@ -99,7 +101,7 @@ const movieSuggesterFlow = ai.defineFlow(
     });
 
     if (!movies || movies.length === 0) {
-        throw new Error("Could not fetch movies from the data source.");
+        return { suggestions: [], error: "Could not fetch movies from the data source." };
     }
     
     // We only need a subset of movie data for the prompt to save tokens
@@ -110,11 +112,19 @@ const movieSuggesterFlow = ai.defineFlow(
     }));
 
     // Step 2: Generate suggestions and reasons in a single AI call
-    const { output: suggestionResult } = await suggestionGeneratorPrompt({
-        movies: movieDataForPrompt,
-        mood: input.mood,
-        preferences: input.preferences || [],
-    });
+    let suggestionResult;
+    try {
+        const { output } = await suggestionGeneratorPrompt({
+            movies: movieDataForPrompt,
+            mood: input.mood,
+            preferences: input.preferences || [],
+        });
+        suggestionResult = output;
+    } catch (e: any) {
+        console.error("AI suggestion generation failed:", e);
+        return { suggestions: [], error: "The AI service is currently busy or unavailable. Please try again in a moment." };
+    }
+
 
     if (!suggestionResult || !suggestionResult.suggestions || suggestionResult.suggestions.length === 0) {
       return { suggestions: [] };
