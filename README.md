@@ -2,7 +2,7 @@
 
 Cinepedia is a modern, responsive web application for movie enthusiasts. Discover popular movies, read and write community reviews, vote in movie face-offs, and get AI-powered suggestions for what to watch next based on your mood. This project was built with **Next.js**, **Firebase**, and **Genkit** to showcase a feature-rich, AI-integrated application.
 
-![Cinepedia Screenshot](https://storage.googleapis.com/studio-hosting-assets/misc-assets/cinepedia/cinepedia-screenshot-v2.png)
+![Cinepedia Screenshot](https://images.unsplash.com/photo-1574267432553-4b4628081c31?q=80&w=2574&auto=format&fit=crop)
 
 ## ✨ Key Features
 
