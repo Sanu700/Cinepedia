@@ -26,8 +26,6 @@ rules_version = '2';
  * - Default Deny: All paths are closed by default, and permissions are granted explicitly.
  * - Email Verification: The `request.auth.token.email_verified` flag is a mandatory check for
  *   all write operations that contribute content, enhancing the platform's trustworthiness.
- * - Spam Prevention: New accounts (less than 24 hours old) are prohibited from writing reviews
- *   to mitigate spam and low-quality content. This requires a `get` call to the user's profile.
  * - User Isolation: Users are strictly forbidden from listing or viewing other users' private
  *   profile data.
  * - Admin-Managed Content: Collections like `/movies` and `/polls` are treated as read-only for
@@ -79,23 +77,11 @@ service cloud.firestore {
     }
 
     /**
-     * Checks if the user's account is older than 24 hours to prevent spam.
-     * NOTE: This requires that the 'creationTimestamp' field on the user's profile
-     * is saved as a Firestore Timestamp object.
-     */
-    function isEstablishedUser() {
-      let userCreationTime = get(/databases/$(database)/documents/users/$(request.auth.uid)).data.creationTimestamp;
-      // Ensure creationTime is not null and is a timestamp before comparison.
-      return userCreationTime != null && request.time > userCreationTime + duration.value(24, 'h');
-    }
-
-    /**
      * Validates all conditions for creating a new review.
-     * A user must be verified, have an account older than 24 hours,
-     * and correctly set the owner `userId` field in the review data.
+     * A user must be verified, and correctly set the owner `userId` field.
      */
     function isValidNewReview() {
-      return isVerifiedUser() && isEstablishedUser() && request.resource.data.userId == request.auth.uid;
+      return isVerifiedUser() && request.resource.data.userId == request.auth.uid;
     }
 
     // -------------------------------------------------------------------------
