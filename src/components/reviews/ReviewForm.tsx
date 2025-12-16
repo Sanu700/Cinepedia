@@ -17,6 +17,7 @@ import { submitReview } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, LogIn } from 'lucide-react';
 import Link from 'next/link';
+import { Checkbox } from '../ui/checkbox';
 
 interface ReviewFormProps {
   movieId: string;
@@ -33,6 +34,7 @@ export default function ReviewForm({ movieId, movieSynopsis }: ReviewFormProps) 
     defaultValues: {
       rating: 0,
       text: '',
+      hasSpoiler: false,
       movieId: movieId,
       userId: user?.uid,
     },
@@ -64,6 +66,7 @@ export default function ReviewForm({ movieId, movieSynopsis }: ReviewFormProps) 
             form.reset({
               rating: 0,
               text: '',
+              hasSpoiler: false,
               movieId: movieId,
               userId: user.uid,
             });
@@ -133,6 +136,26 @@ export default function ReviewForm({ movieId, movieSynopsis }: ReviewFormProps) 
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="hasSpoiler"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                   <FormControl>
+                        <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        disabled={isPending}
+                        />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>This review contains spoilers</FormLabel>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+
             <div className="space-y-4">
               <AiSuggestion movieSynopsis={movieSynopsis} reviewContext={reviewText} />
             </div>
@@ -147,3 +170,5 @@ export default function ReviewForm({ movieId, movieSynopsis }: ReviewFormProps) 
     </Card>
   );
 }
+
+    

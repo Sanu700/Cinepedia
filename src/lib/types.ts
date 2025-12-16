@@ -46,6 +46,7 @@ export interface Review {
   rating: number;
   text: string;
   createdAt: string; // ISO string
+  hasSpoiler?: boolean;
   user: User;
 }
 
@@ -79,3 +80,5 @@ export interface TMDBSearchResult<T> {
   total_pages: number;
   total_results: number;
 }
+
+    

@@ -30,6 +30,9 @@ export const ReviewSchema = z.object({
     }).max(1000, {
         message: "Review must not exceed 1000 characters."
     }),
+    hasSpoiler: z.boolean().default(false).optional(),
     movieId: z.string(),
     userId: z.string().optional(), // Made optional on client, will be injected on server
 });
+
+    

@@ -1,9 +1,11 @@
+
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import StarRating from '@/components/reviews/StarRating';
 import type { Review } from '@/lib/types';
 import { User as UserIcon } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import Spoiler from './Spoiler';
 
 interface ReviewListProps {
   reviews: Review[];
@@ -38,10 +40,18 @@ export default function ReviewList({ reviews }: ReviewListProps) {
             <StarRating rating={review.rating} size={20} isInteractive={false} />
           </CardHeader>
           <CardContent>
-            <p className="text-foreground/90">{review.text}</p>
+            {review.hasSpoiler ? (
+              <Spoiler>
+                <p className="text-foreground/90">{review.text}</p>
+              </Spoiler>
+            ) : (
+              <p className="text-foreground/90">{review.text}</p>
+            )}
           </CardContent>
         </Card>
       ))}
     </div>
   );
 }
+
+    

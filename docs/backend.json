@@ -117,6 +117,10 @@
         "likes": {
           "type": "number",
           "description": "The number of likes the review has received."
+        },
+        "hasSpoiler": {
+            "type": "boolean",
+            "description": "Indicates whether the review contains spoilers."
         }
       },
       "required": [
@@ -298,3 +302,5 @@
     "reasoning": "The Firestore structure is designed to prioritize authorization independence, clarity, and scalability. It leverages denormalization to avoid hierarchical authorization dependencies, ensuring atomic operations and simplified security rules. Segregation of data into collections with homogeneous security postures simplifies rules and ensures QAPs. Path-based ownership is used where appropriate to avoid complex authorization logic, and membership maps are employed for collaborative data access. Radically consistent naming conventions improve debuggability.\n\nSpecifically, authorization independence is achieved by denormalizing user information (isEmailVerified, trustScore) into the reviews collection. This allows us to write security rules for reviews without needing to perform `get()` operations to the users collection. This is crucial for maintaining atomic operations (transactions and batches) when creating or updating reviews.\n\nThe design supports QAPs as follows:\n\n*   Secure List Operations: By segregating data based on ownership (e.g., `/users/{userId}/reviews`) and using dedicated collections for global roles (`/roles_admin/{uid}` - although not explicitly used here, it's a general principle), the structure ensures that list operations can be secured without filtering data based on content.\n*   Membership Model: The `members` field in collaborative documents is denormalized, which avoids `get()` calls to parent documents to verify membership, allowing secure reads and writes without complex filtering."
   }
 }
+
+    

@@ -75,7 +75,7 @@ export async function submitReview(values: z.infer<typeof ReviewSchema>) {
         return { error: "Invalid review data!" };
     }
 
-    const { movieId, rating, text, userId } = validatedFields.data;
+    const { movieId, rating, text, hasSpoiler, userId } = validatedFields.data;
 
     if (!userId) {
         return { error: "You must be logged in to post a review." };
@@ -110,6 +110,7 @@ export async function submitReview(values: z.infer<typeof ReviewSchema>) {
             userId,
             rating,
             reviewText: text,
+            hasSpoiler: hasSpoiler || false,
             timestamp: serverTimestamp(),
             likes: 0,
         });
@@ -149,3 +150,5 @@ export async function submitVote(pollId: string, movieId: string) {
          return { error: "Failed to cast vote. You may have already voted in this poll." };
     }
 }
+
+    
