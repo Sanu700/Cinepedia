@@ -1,3 +1,64 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "A vibrant, abstract representation of cinema and movies.",
+      "imageUrl": "https://images.unsplash.com/photo-1679228135500-030392d815f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjaW5lbWElMjBhYnN0cmFjdHxlbnwwfHx8fDE3NjU4NjYxODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cinema abstract"
+    },
+    {
+      "id": "movie-1",
+      "description": "Poster for the movie 'Stellar Odyssey'.",
+      "imageUrl": "https://images.unsplash.com/photo-1749952564892-78ca504aa9c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzcGFjZSUyMG1vdmllfGVufDB8fHx8MTc2NTc3NDQ1MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "space movie"
+    },
+    {
+      "id": "movie-2",
+      "description": "Poster for the movie 'Echoes of the Past'.",
+      "imageUrl": "https://images.unsplash.com/photo-1762356121454-877acbd554bb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkcmFtYSUyMG1vdmllfGVufDB8fHx8MTc2NTc2OTI3NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "drama movie"
+    },
+    {
+      "id": "movie-3",
+      "description": "Poster for the movie 'The Last Stand'.",
+      "imageUrl": "https://images.unsplash.com/photo-1575919220112-0d5a2dc6a4b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxhY3Rpb24lMjBtb3ZpZXxlbnwwfHx8fDE3NjU4MDgyMTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "action movie"
+    },
+    {
+      "id": "movie-4",
+      "description": "Poster for the movie 'Cybernetic Dreams'.",
+      "imageUrl": "https://images.unsplash.com/photo-1655006852875-7912caa28e8e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzY2ktZmklMjBtb3ZpZXxlbnwwfHx8fDE3NjU4MTE4NTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sci-fi movie"
+    },
+    {
+      "id": "movie-5",
+      "description": "Poster for the movie 'Whispers in the Woods'.",
+      "imageUrl": "https://images.unsplash.com/photo-1630338679049-2ca5e3428f7d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxteXN0ZXJ5JTIwbW92aWV8ZW58MHx8fHwxNzY1ODY2MTgzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mystery movie"
+    },
+    {
+      "id": "movie-6",
+      "description": "Poster for the movie 'City of Laughs'.",
+      "imageUrl": "https://images.unsplash.com/photo-1758525862263-af89b090fb56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjb21lZHklMjBtb3ZpZXxlbnwwfHx8fDE3NjU4NTI5MjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "comedy movie"
+    },
+    {
+      "id": "avatar-1",
+      "description": "User avatar 1.",
+      "imageUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjU4NjUxMjF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "avatar-2",
+      "description": "User avatar 2.",
+      "imageUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2NTc3NTIwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "avatar-3",
+      "description": "User avatar 3.",
+      "imageUrl": "https://images.unsplash.com/photo-1636377985931-898218afd306?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjU4MzUyOTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man portrait"
+    }
+  ]
 }
