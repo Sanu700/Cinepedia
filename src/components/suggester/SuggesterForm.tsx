@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Loader2, Film, Tv, Star, Clock } from 'lucide-react';
+import { Loader2, Star, Clock } from 'lucide-react';
 import { suggestMovies, MovieSuggesterInput } from '@/ai/flows/movie-suggester';
 import type { MovieSuggesterOutput } from '@/ai/flows/movie-suggester';
 import Image from 'next/image';
@@ -83,7 +83,7 @@ export default function SuggesterForm() {
           description: "The movie suggestion service is currently unavailable. Please try again in a moment.",
           variant: "destructive",
         });
-        reset(); // Go back to the initial state
+        reset();
       }
     });
   };
