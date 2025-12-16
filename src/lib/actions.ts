@@ -98,12 +98,16 @@ export async function submitReview(values: z.infer<typeof ReviewSchema>) {
             }
 
             const userData = userDoc.data();
-            if (!userData.isEmailVerified) {
+
+            // This check is now primarily handled by security rules, but we keep it
+            // for immediate client-side feedback.
+            if (auth.currentUser && !auth.currentUser.emailVerified) {
                 throw "You must verify your email to post a review.";
             }
 
             const accountAge = Date.now() - (userData?.creationTimestamp?.toDate()?.getTime() || Date.now());
             const twentyFourHoursInMillis = 24 * 60 * 60 * 1000;
+
             if (accountAge < twentyFourHoursInMillis) {
                 throw "New accounts must wait 24 hours before posting a review to prevent spam.";
             }
@@ -114,7 +118,7 @@ export async function submitReview(values: z.infer<typeof ReviewSchema>) {
                 movieId,
                 userId,
                 rating,
-                reviewText: text,
+                text,
                 hasSpoiler: hasSpoiler || false,
                 createdAt: serverTimestamp(),
                 likes: 0,
@@ -125,7 +129,7 @@ export async function submitReview(values: z.infer<typeof ReviewSchema>) {
 
     } catch(e: any) {
         console.error("Review submission error:", e);
-        const errorMessage = typeof e === 'string' ? e : "Could not submit review. Please try again.";
+        const errorMessage = typeof e === 'string' ? e : (e.message || "Could not submit review. Please try again.");
         return { error: errorMessage };
     }
 }
@@ -149,7 +153,7 @@ export async function updateReview(reviewId: string, values: z.infer<typeof Revi
         // Security rules will enforce ownership, so we proceed with the update.
         await updateDoc(reviewRef, {
             rating,
-            reviewText: text,
+            text,
             hasSpoiler: hasSpoiler || false,
         });
         return { success: "Review updated successfully!" };

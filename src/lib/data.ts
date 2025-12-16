@@ -166,4 +166,3 @@ export async function getPoll(): Promise<{ poll: import('@/lib/types').Poll, use
     userVote: null,
   });
 }
-
