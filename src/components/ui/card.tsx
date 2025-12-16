@@ -1,4 +1,5 @@
 import * as React from "react"
+import { motion } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 
@@ -16,6 +17,9 @@ const Card = React.forwardRef<
   />
 ))
 Card.displayName = "Card"
+
+
+const MotionCard = motion(Card);
 
 const CardHeader = React.forwardRef<
   HTMLDivElement,
@@ -76,4 +80,4 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+export { MotionCard, Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }

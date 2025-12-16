@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { MotionCard } from '@/components/ui/card';
 import { Star } from 'lucide-react';
 import type { Movie } from '@/lib/types';
 import { placeholderImages } from '@/lib/data';
@@ -14,8 +14,11 @@ export default function MovieCard({ movie }: MovieCardProps) {
 
   return (
     <Link href={`/movies/${movie.id}`} className="group block">
-        <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:border-primary/50">
-            <CardHeader className="p-0 relative aspect-[2/3] w-full">
+        <MotionCard 
+            className="h-full flex flex-col overflow-hidden transition-all duration-300"
+            whileHover={{ y: -5, boxShadow: "0px 10px 20px hsla(var(--primary) / 0.2)" }}
+        >
+            <div className="p-0 relative aspect-[2/3] w-full overflow-hidden">
                 {poster ? (
                     <Image
                         src={poster.imageUrl}
@@ -30,18 +33,18 @@ export default function MovieCard({ movie }: MovieCardProps) {
                         <span className="text-muted-foreground">No Image</span>
                     </div>
                 )}
-            </CardHeader>
-            <CardContent className="flex-grow p-4">
-                <CardTitle className="font-headline text-xl leading-tight">{movie.title}</CardTitle>
+            </div>
+            <div className="flex-grow p-4">
+                <h2 className="font-headline text-xl leading-tight">{movie.title}</h2>
                 <p className="text-sm text-muted-foreground mt-1">{movie.releaseYear}</p>
-            </CardContent>
-            <CardFooter className="p-4 pt-0">
+            </div>
+            <div className="p-4 pt-0">
                 <div className="flex items-center gap-2 text-amber-400">
                     <Star className="w-5 h-5 fill-current" />
                     <span className="font-bold text-lg text-foreground">{movie.avgRating > 0 ? movie.avgRating.toFixed(1) : 'N/A'}</span>
                 </div>
-            </CardFooter>
-        </Card>
+            </div>
+        </MotionCard>
     </Link>
   );
 }
