@@ -9,73 +9,73 @@
     {
       "id": "movie-1",
       "description": "Poster for the movie 'Stellar Odyssey'.",
-      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Stellar%0AOdyssey",
+      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Stellar%0AOdyssey",
       "imageHint": "space movie"
     },
     {
       "id": "movie-2",
       "description": "Poster for the movie 'Echoes of the Past'.",
-      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Echoes%0Aof%20the%20Past",
+      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Echoes%0Aof%20the%20Past",
       "imageHint": "drama movie"
     },
     {
       "id": "movie-3",
       "description": "Poster for the movie 'The Last Stand'.",
-      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=The%20Last%0AStand",
+      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=The%20Last%0AStand",
       "imageHint": "action movie"
     },
     {
       "id": "movie-4",
       "description": "Poster for the movie 'Cybernetic Dreams'.",
-      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Cybernetic%0ADreams",
+      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Cybernetic%0ADreams",
       "imageHint": "sci-fi movie"
     },
     {
       "id": "movie-5",
       "description": "Poster for the movie 'Whispers in the Woods'.",
-      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Whispers%0Ain%20the%20Woods",
+      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Whispers%0Ain%20the%20Woods",
       "imageHint": "mystery movie"
     },
     {
       "id": "movie-6",
       "description": "Poster for the movie 'City of Laughs'.",
-      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=City%0Aof%20Laughs",
+      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=City%0Aof%20Laughs",
       "imageHint": "comedy movie"
     },
     {
       "id": "movie-7",
       "description": "Poster for the movie 'RRR'.",
-      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=RRR",
+      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=RRR",
       "imageHint": "indian movie"
     },
     {
       "id": "movie-8",
       "description": "Poster for the movie 'Parasite'.",
-      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Parasite",
+      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Parasite",
       "imageHint": "korean movie"
     },
     {
       "id": "movie-9",
       "description": "Poster for the movie 'Dune: Part Two'.",
-      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Dune%0APart%20Two",
+      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Dune%0APart%20Two",
       "imageHint": "adventure movie"
     },
     {
       "id": "movie-10",
       "description": "Poster for the movie '3 Idiots'.",
-      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=3%20Idiots",
+      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=3%20Idiots",
       "imageHint": "comedy movie"
     },
     {
       "id": "movie-11",
       "description": "Poster for the movie 'Spirited Away'.",
-      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=Spirited%0AAway",
+      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=Spirited%0AAway",
       "imageHint": "animation movie"
     },
     {
       "id": "movie-12",
       "description": "Poster for the movie 'The Dark Knight'.",
-      "imageUrl": "https://placehold.co/600x900/222831/E84545?text=The%20Dark%0AKnight",
+      "imageUrl": "https://placehold.co/600x900/1a1a1a/ffffff?text=The%20Dark%0AKnight",
       "imageHint": "superhero movie"
     },
     {
