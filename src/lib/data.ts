@@ -1,5 +1,7 @@
 
+
 import type { Movie, Review, User, UserActivity, TMDBSearchResult, Streak, WatchProviderResult } from '@/lib/types';
+import { v4 as uuidv4 } from 'uuid';
 
 // --- TMDB API ---
 const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
@@ -134,19 +136,34 @@ export const mockUserActivity: UserActivity[] = [
 
 
 export async function getPoll(): Promise<{ poll: import('@/lib/types').Poll, userVote: string | null } | null> {
-  const movies = await getMovies();
+  const movies = await getMovies({ 'vote_count.gte': '500' });
   if (movies.length < 2) return null;
-  const movieA = movies[0];
-  const movieB = movies[1];
+
+  // Select two different random movies
+  let indexA = Math.floor(Math.random() * movies.length);
+  let indexB = Math.floor(Math.random() * movies.length);
+  // Ensure they are not the same movie
+  while (indexA === indexB) {
+    indexB = Math.floor(Math.random() * movies.length);
+  }
+
+  const movieA = movies[indexA];
+  const movieB = movies[indexB];
+
+  // Generate random vote counts for a more dynamic feel
+  const votesA = Math.floor(Math.random() * 500) + 50;
+  const votesB = Math.floor(Math.random() * 500) + 50;
+
   return Promise.resolve({
     poll: {
-      id: 'poll-1',
+      id: `poll-${uuidv4()}`,
       movieA,
       movieB,
-      votesA: 150,
-      votesB: 80,
-      totalVotes: 230,
+      votesA: votesA,
+      votesB: votesB,
+      totalVotes: votesA + votesB,
     },
     userVote: null,
   });
 }
+
